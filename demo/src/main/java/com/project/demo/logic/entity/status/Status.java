@@ -10,8 +10,7 @@ public class Status {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private StatusEnum name;
+    private String name;
 
     private Integer value;
 
@@ -26,11 +25,11 @@ public class Status {
         this.id = id;
     }
 
-    public StatusEnum getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(StatusEnum name) {
+    public void setName(String name) {
         this.name = name;
     }
 

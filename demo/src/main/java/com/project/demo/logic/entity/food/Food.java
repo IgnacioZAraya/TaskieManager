@@ -11,8 +11,7 @@ public class Food {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private FoodEnum name;
+    private String name;
 
     private Long value;
 
@@ -29,11 +28,11 @@ public class Food {
         this.id = id;
     }
 
-    public FoodEnum getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(FoodEnum name) {
+    public void setName(String name) {
         this.name = name;
     }
 
