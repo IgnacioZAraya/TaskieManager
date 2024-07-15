@@ -11,8 +11,7 @@ public class Specie {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SpecieEnum name;
+    private String name;
 
     private String description;
 
@@ -27,11 +26,11 @@ public class Specie {
         this.id = id;
     }
 
-    public SpecieEnum getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(SpecieEnum name) {
+    public void setName(String name) {
         this.name = name;
     }
 

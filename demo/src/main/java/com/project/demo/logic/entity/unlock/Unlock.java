@@ -6,7 +6,7 @@ import com.project.demo.logic.entity.status.Status;
 import com.project.demo.logic.entity.taskie.Taskie;
 import jakarta.persistence.*;
 
-@Table(name = "unlock")
+@Table(name = "unlocks")
 @Entity
 public class Unlock {
     @Id

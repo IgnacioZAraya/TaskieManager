@@ -37,8 +37,7 @@ public class Task {
     private Boolean isCompleted;
 
     @Column(unique = true, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private TaskEnum taskType;
+    private String taskType;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -120,11 +119,11 @@ public class Task {
         isCompleted = completed;
     }
 
-    public TaskEnum getTaskType() {
+    public String getTaskType() {
         return taskType;
     }
 
-    public void setTaskType(TaskEnum taskType) {
+    public void setTaskType(String taskType) {
         this.taskType = taskType;
     }
 
