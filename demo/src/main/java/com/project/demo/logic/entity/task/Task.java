@@ -19,8 +19,8 @@ public class Task {
 
     private String name;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     private Integer priority;
@@ -31,13 +31,12 @@ public class Task {
 
     private Date endDate;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "prize_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "prize_id", referencedColumnName = "id")
     private Prize prize;
 
     private Boolean isCompleted;
 
-    @Column(unique = true, nullable = false)
-    private String taskType;
+    private Boolean verified;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -47,9 +46,11 @@ public class Task {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+
     public Long getId() {
         return id;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -118,15 +119,7 @@ public class Task {
     public void setCompleted(Boolean completed) {
         isCompleted = completed;
     }
-
-    public String getTaskType() {
-        return taskType;
-    }
-
-    public void setTaskType(String taskType) {
-        this.taskType = taskType;
-    }
-
+    
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -141,6 +134,14 @@ public class Task {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Boolean getVerified() {
+        return verified;
+    }
+
+    public void setVerified(Boolean verified) {
+        this.verified = verified;
     }
 
     public Task() {
