@@ -1,8 +1,12 @@
 package com.project.demo.rest.user;
 
+import com.project.demo.logic.entity.rol.Role;
+import com.project.demo.logic.entity.rol.RoleEnum;
+import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,12 +14,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
 public class userRestController {
     @Autowired
     private UserRepository UserRepository;
+
+    @Autowired
+    private RoleRepository RoleRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -27,9 +35,19 @@ public class userRestController {
     }
 
     @PostMapping
-    public User addUser(@RequestBody User user) {
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> addUser(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return UserRepository.save(user);
+        Optional<Role> optionalRole = RoleRepository.findByName(RoleEnum.USER);
+        Optional<User> optionalUser = UserRepository.findByEmail(user.getEmail());
+
+        if (optionalRole.isEmpty() || optionalUser.isPresent()) {
+            return null;
+        }
+
+        user.setRole(optionalRole.get());
+        User savedUser = UserRepository.save(user);
+        return ResponseEntity.ok(savedUser);
     }
 
     @GetMapping("/{id}")
@@ -43,6 +61,7 @@ public class userRestController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return UserRepository.findById(id)
                 .map(existingUser -> {
