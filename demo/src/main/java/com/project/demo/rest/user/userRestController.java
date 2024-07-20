@@ -31,8 +31,11 @@ public class userRestController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public List<User> getAllUsers() {
-        return UserRepository.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User authenticatedUser = (User) authentication.getPrincipal();
+        return UserRepository.findAllExcludingAuthenticatedUser(authenticatedUser.getId());
     }
+
 
     @PostMapping
     @PreAuthorize("hasRole('SUPER_ADMIN')")
