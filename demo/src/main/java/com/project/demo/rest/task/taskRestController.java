@@ -60,12 +60,11 @@ public class taskRestController {
     public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
         return TaskRepository.findById(id)
                 .map(existingTask -> {
-                    existingTask.setName(existingTask.getName());
-                    existingTask.setPriority(existingTask.getPriority());
-                    existingTask.setDescription(existingTask.getDescription());
-                    existingTask.setStartDate(existingTask.getStartDate());
-                    existingTask.setEndDate(existingTask.getEndDate());
-                    existingTask.setCompleted(existingTask.getCompleted());
+                    existingTask.setName(task.getName());
+                    existingTask.setPriority(task.getPriority());
+                    existingTask.setDescription(task.getDescription());
+                    existingTask.setStartDate(task.getStartDate());
+                    existingTask.setEndDate(task.getEndDate());
                     return TaskRepository.save(existingTask);
                 })
                 .orElseGet(() -> {
@@ -75,8 +74,16 @@ public class taskRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTask(@PathVariable Long id) {
-        TaskRepository.deleteById(id);
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        Optional<Task> optionalTask = TaskRepository.findById(id);
+        if (optionalTask.isPresent()) {
+            Task task = optionalTask.get();
+            task.setVisible(false);
+            TaskRepository.save(task);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 

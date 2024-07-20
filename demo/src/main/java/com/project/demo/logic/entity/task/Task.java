@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.task;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.demo.logic.entity.food.FoodEnum;
 import com.project.demo.logic.entity.prize.Prize;
 import com.project.demo.logic.entity.unlock.Unlock;
@@ -8,6 +9,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Table(name = "task")
@@ -33,6 +35,9 @@ public class Task {
     private Date startDate;
 
     private Date endDate;
+
+    private boolean visible;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "prize_id", referencedColumnName = "id")
     private Prize prize;
@@ -54,6 +59,13 @@ public class Task {
         return id;
     }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -139,13 +151,22 @@ public class Task {
         this.updatedAt = updatedAt;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     public Boolean getVerified() {
         return verified;
     }
 
-        public void setVerified(Boolean verified) {
+    public void setVerified(Boolean verified) {
             this.verified = verified;
         }
+
 
 
     public Task() {

@@ -1,15 +1,36 @@
 package com.project.demo.logic.entity.task;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.ZonedDateTime;
+
 import java.util.Date;
 
 public class TaskDTO {
-    //private Long id;
+    private Long id;
     private String name;
     private Integer priority;
     private String description;
     private Date startDate;
+
     private Date endDate;
 
+    private boolean visible;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 
     public String getName() {
         return name;
@@ -52,7 +73,7 @@ public class TaskDTO {
     }
 
     public TaskDTO(Long id, String name, Integer priority, String description, Date startDate, Date endDate) {
-        //this.id = id;
+        this.id = id;
         this.name = name;
         this.priority = priority;
         this.description = description;
