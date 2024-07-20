@@ -23,6 +23,9 @@ public class Task {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @Transient
+    private Long userId;
+
     private Integer priority;
 
     private String description;
@@ -140,9 +143,10 @@ public class Task {
         return verified;
     }
 
-    public void setVerified(Boolean verified) {
-        this.verified = verified;
-    }
+        public void setVerified(Boolean verified) {
+            this.verified = verified;
+        }
+
 
     public Task() {
     }

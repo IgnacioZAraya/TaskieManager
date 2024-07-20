@@ -14,4 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long>  {
     Optional<User> findByName(String name);
 
     Optional<User> findByEmail(String email);
+
+    @Query("SELECT u FROM User u WHERE u.id <> ?1")
+    List<User> findAllExcludingAuthenticatedUser(Long authenticatedUserId);
 }
