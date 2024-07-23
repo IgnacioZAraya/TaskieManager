@@ -45,7 +45,6 @@ public class cosmeticRestController {
     }
 
 
-
     @DeleteMapping("/{id}")
     public void deleteCosmetic(@PathVariable Long id) {
         CosmeticRepository.deleteById(id);

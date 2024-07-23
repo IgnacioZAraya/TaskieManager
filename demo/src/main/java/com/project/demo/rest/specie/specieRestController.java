@@ -18,7 +18,7 @@ public class specieRestController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
     public List<Specie> getAllSpecie() {
-        return SpecieRepository.findAll();
+        return (List<Specie>) SpecieRepository.findAll();
     }
 
     @PostMapping

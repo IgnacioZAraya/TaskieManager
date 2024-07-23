@@ -7,11 +7,13 @@ import jakarta.persistence.*;
 @Entity
 public class Specie {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false)
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private SpecieEnum name;
 
     private String description;
 
@@ -26,11 +28,11 @@ public class Specie {
         this.id = id;
     }
 
-    public String getName() {
+    public SpecieEnum getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(SpecieEnum name) {
         this.name = name;
     }
 

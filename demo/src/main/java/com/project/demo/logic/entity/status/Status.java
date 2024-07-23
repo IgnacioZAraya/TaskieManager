@@ -6,13 +6,15 @@ import jakarta.persistence.*;
 @Entity
 public class Status {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false)
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private StatusEnum name;
 
-    private Integer value;
+    private String descripcion;
 
     public Status() {
     }
@@ -25,19 +27,19 @@ public class Status {
         this.id = id;
     }
 
-    public String getName() {
+    public StatusEnum getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(StatusEnum name) {
         this.name = name;
     }
 
-    public Integer getValue() {
-        return value;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setValue(Integer value) {
-        this.value = value;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }
