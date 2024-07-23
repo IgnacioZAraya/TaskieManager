@@ -19,6 +19,7 @@ public class Unlock {
 
     private Boolean isUnlocked;
 
+/*Reutilizar para el sistema de niveles del taskie*/
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "cosmetic_id", referencedColumnName = "id", nullable = false)
     private Cosmetic cosmetic;

@@ -1,6 +1,12 @@
 package com.project.demo.logic.entity.specie;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SpecieRepository extends JpaRepository<Specie, Long> {
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface SpecieRepository extends CrudRepository<Specie, Long> {
+    Optional<Specie> findByName(SpecieEnum name);
 }

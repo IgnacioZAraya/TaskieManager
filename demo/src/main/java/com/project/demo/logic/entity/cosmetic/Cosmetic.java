@@ -10,7 +10,16 @@ public class Cosmetic{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private CosmeticEnum name;
     private String sprite;
+
+    public CosmeticEnum getName() {
+        return name;
+    }
+
+    public void setName(CosmeticEnum name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;

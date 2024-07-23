@@ -24,17 +24,13 @@ public class Taskie {
     @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
     private Status status;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "unlock_id", referencedColumnName = "id", nullable = false)
-    private Unlock unlock;
+
 
     private Long experience;
 
     private String sprite;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "cosmetic_id", referencedColumnName = "id", nullable = false)
-    private Cosmetic cosmetic;
+
 
     public Taskie() {
     }
@@ -71,13 +67,6 @@ public class Taskie {
         this.status = status;
     }
 
-    public Unlock getUnlock() {
-        return unlock;
-    }
-
-    public void setUnlock(Unlock unlock) {
-        this.unlock = unlock;
-    }
 
     public Long getExperience() {
         return experience;
@@ -95,11 +84,4 @@ public class Taskie {
         this.sprite = sprite;
     }
 
-    public Cosmetic getCosmetic() {
-        return cosmetic;
-    }
-
-    public void setCosmetic(Cosmetic cosmetic) {
-        this.cosmetic = cosmetic;
-    }
 }
