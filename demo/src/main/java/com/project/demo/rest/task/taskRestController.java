@@ -30,6 +30,7 @@ public class taskRestController {
 
     @PostMapping
     public Task addTask(@RequestBody Task task) {
+        task.setVisible(true);
         Long userId = task.getUserId();  // Obtener el id de la categoría
 
         if (userId == null) {
@@ -65,6 +66,7 @@ public class taskRestController {
                     existingTask.setDescription(task.getDescription());
                     existingTask.setStartDate(task.getStartDate());
                     existingTask.setEndDate(task.getEndDate());
+                    existingTask.setVisible(true);
                     return TaskRepository.save(existingTask);
                 })
                 .orElseGet(() -> {
