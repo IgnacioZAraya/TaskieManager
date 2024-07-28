@@ -1,8 +1,5 @@
 package com.project.demo.logic.entity.task;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.ZonedDateTime;
-
 import java.util.Date;
 
 public class TaskDTO {
@@ -11,10 +8,12 @@ public class TaskDTO {
     private Integer priority;
     private String description;
     private Date startDate;
-
     private Date endDate;
-
     private boolean visible;
+
+    private String recurrent;
+
+    private Long repeatTimes;
 
     public Long getId() {
         return id;
@@ -72,13 +71,32 @@ public class TaskDTO {
         this.endDate = endDate;
     }
 
-    public TaskDTO(Long id, String name, Integer priority, String description, Date startDate, Date endDate) {
+    public String getRecurrent() {
+        return recurrent;
+    }
+
+    public void setRecurrent(String recurrent) {
+        this.recurrent = recurrent;
+    }
+
+    public Long getRepeatTimes() {
+        return repeatTimes;
+    }
+
+    public void setRepeatTimes(Long repeatTimes) {
+        this.repeatTimes = repeatTimes;
+    }
+
+    public TaskDTO(Long id, String name, Integer priority, String description, Date startDate, Date endDate, Boolean visible, String recurrent, Long repeatTimes) {
         this.id = id;
         this.name = name;
         this.priority = priority;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.visible = visible;
+        this.recurrent = recurrent;
+        this.repeatTimes = repeatTimes;
     }
 
 }

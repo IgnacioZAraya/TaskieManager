@@ -31,25 +31,27 @@ public class taskRestController {
     @PostMapping
     public Task addTask(@RequestBody Task task) {
         task.setVisible(true);
-        Long userId = task.getUserId();  // Obtener el id de la categoría
-
+        Long userId = task.getUserId();
         if (userId == null) {
             throw new IllegalArgumentException("User ID must not be null");
         }
-
         Optional<User> optionalUser = UserRepository.findById(userId);
         if (optionalUser.isPresent()) {
-            task.setUser(optionalUser.get());  // Asignar la categoría encontrada al producto
-            return TaskRepository.save(task);
+            task.setUser(optionalUser.get());
+            Task savedTask = TaskRepository.save(task);
+
+            if (task.getRecurrent() != null && !task.getRecurrent().equalsIgnoreCase("never") && task.getRepeatTimes() != null && task.getRepeatTimes() > 0) {
+                List<Task> recurringTasks = savedTask.generateRecurringTasks();
+                for (Task recurringTask : recurringTasks) {
+                    recurringTask.setParentId(savedTask.getId());
+                }
+                TaskRepository.saveAll(recurringTasks);
+            }
+            return savedTask;
         } else {
             throw new IllegalArgumentException("User not found with id: " + userId);
         }
     }
-
-   /*@GetMapping("/userId/{id}")
-   public List<TaskDTO> getTasksByUserId(Long userId) {
-       return TaskRepository.findByUser(userId);
-   }*/
 
     @GetMapping("/userId/{userId}")
     public ResponseEntity<List<TaskDTO>> getTasksByUserId(@PathVariable Long userId) {
@@ -66,8 +68,21 @@ public class taskRestController {
                     existingTask.setDescription(task.getDescription());
                     existingTask.setStartDate(task.getStartDate());
                     existingTask.setEndDate(task.getEndDate());
+                    existingTask.setRecurrent(task.getRecurrent());
+                    existingTask.setRepeatTimes(task.getRepeatTimes());
                     existingTask.setVisible(true);
-                    return TaskRepository.save(existingTask);
+                    Task updatedTask = TaskRepository.save(existingTask);
+
+                    // Eliminar instancias recurrentes existentes
+                    TaskRepository.deleteByParentId(updatedTask.getId());
+
+                    // Crear nuevas instancias recurrentes
+                    if (updatedTask.getRecurrent() != null && !updatedTask.getRecurrent().equalsIgnoreCase("never") && updatedTask.getRepeatTimes() != null && updatedTask.getRepeatTimes() > 0) {
+                        List<Task> recurringTasks = updatedTask.generateRecurringTasks();
+                        TaskRepository.saveAll(recurringTasks);
+                    }
+
+                    return updatedTask;
                 })
                 .orElseGet(() -> {
                     task.setId(id);
