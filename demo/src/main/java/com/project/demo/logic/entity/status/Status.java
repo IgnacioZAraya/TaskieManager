@@ -14,7 +14,8 @@ public class Status {
     @Enumerated(EnumType.STRING)
     private StatusEnum name;
 
-    private String descripcion;
+    private String description;
+
 
     public Status() {
     }
@@ -31,15 +32,17 @@ public class Status {
         return name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
     public void setName(StatusEnum name) {
         this.name = name;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
 }
