@@ -23,11 +23,11 @@ public class CosmeticSeeder implements ApplicationListener<ContextRefreshedEvent
 
     }
     private void loadCosmetics(){
-        CosmeticEnum[] CosmeticNames = new CosmeticEnum[] {CosmeticEnum.SOAP,CosmeticEnum.FOOTBALL,CosmeticEnum.SHAMPOO};
+        CosmeticEnum[] CosmeticNames = new CosmeticEnum[] {CosmeticEnum.FOOD,CosmeticEnum.FOOTBALL,CosmeticEnum.SHAMPOO};
         Map<CosmeticEnum, String> stringSpritesMap = Map.of(
-                CosmeticEnum.SOAP, "../../../assets/cosmetics/soap.png",
-                CosmeticEnum.FOOTBALL, "../../../assets/cosmetics/football.png",
-                CosmeticEnum.SHAMPOO, "../../../assets/cosmetics/shampoo.png"
+                CosmeticEnum.FOOD, "../../../assets/cosmeticsV1/Food.png",
+                CosmeticEnum.FOOTBALL, "../../../assets/cosmeticsV1/football.png",
+                CosmeticEnum.SHAMPOO, "../../../assets/cosmeticsV1/shampoo.png"
 
         );
 
