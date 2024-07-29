@@ -37,7 +37,7 @@ public class Task {
     @Transient
     private Long userId;
 
-    private Integer priority;
+    private String priority;
 
     private String description;
 
@@ -100,11 +100,11 @@ public class Task {
         this.user = user;
     }
 
-    public Integer getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Integer priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
