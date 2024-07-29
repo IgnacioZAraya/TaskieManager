@@ -3,8 +3,8 @@ package com.project.demo.rest.auth;
 import com.project.demo.logic.entity.auth.AuthenticationService;
 import com.project.demo.logic.entity.auth.JwtService;
 import com.project.demo.logic.entity.level.Level;
-import com.project.demo.logic.entity.level.LevelEnum;
 import com.project.demo.logic.entity.level.LevelRepository;
+import com.project.demo.logic.entity.level.LevelUserEnum;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
@@ -75,7 +75,7 @@ public class AuthRestController {
         if (optionalRole.isEmpty()) {
             return null;
         }
-        Optional<Level> optionalLevel = levelRepository.findByName(LevelEnum.valueOf("Level_1"));
+        Optional<Level> optionalLevel = levelRepository.findByName(LevelUserEnum.valueOf("Level_1"));
         if (optionalLevel.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Default level 'Level_1' not found");
         }
