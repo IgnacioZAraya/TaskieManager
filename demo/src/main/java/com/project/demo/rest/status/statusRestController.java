@@ -36,7 +36,7 @@ public class statusRestController {
         return StatusRepository.findById(id)
                 .map(existingStatus -> {
                     existingStatus.setName(existingStatus.getName());
-                    existingStatus.setDescripcion(existingStatus.getDescripcion());
+                    existingStatus.setDescription(existingStatus.getDescription());
                     return StatusRepository.save(existingStatus);
                 })
                 .orElseGet(() -> {
