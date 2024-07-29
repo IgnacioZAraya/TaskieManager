@@ -5,7 +5,7 @@ import java.util.Date;
 public class TaskDTO {
     private Long id;
     private String name;
-    private Integer priority;
+    private String priority;
     private String description;
     private Date startDate;
     private Date endDate;
@@ -14,6 +14,7 @@ public class TaskDTO {
     private String recurrent;
 
     private Long repeatTimes;
+
 
     public Long getId() {
         return id;
@@ -39,11 +40,11 @@ public class TaskDTO {
         this.name = name;
     }
 
-    public Integer getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Integer priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
@@ -87,7 +88,7 @@ public class TaskDTO {
         this.repeatTimes = repeatTimes;
     }
 
-    public TaskDTO(Long id, String name, Integer priority, String description, Date startDate, Date endDate, Boolean visible, String recurrent, Long repeatTimes) {
+    public TaskDTO(Long id, String name, String priority, String description, Date startDate, Date endDate, Boolean visible, String recurrent, Long repeatTimes) {
         this.id = id;
         this.name = name;
         this.priority = priority;

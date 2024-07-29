@@ -31,6 +31,8 @@ public class taskRestController {
     @PostMapping
     public Task addTask(@RequestBody Task task) {
         task.setVisible(true);
+        task.setCompleted(false);
+        task.setVerified(false);
         Long userId = task.getUserId();
         if (userId == null) {
             throw new IllegalArgumentException("User ID must not be null");
@@ -58,6 +60,23 @@ public class taskRestController {
         List<TaskDTO> tasks = TaskRepository.findByUser(userId);
         return ResponseEntity.ok(tasks);
     }
+    @GetMapping("/history/{userId}")
+    public ResponseEntity<List<TaskDTO>> getHistoryByUserId(@PathVariable Long userId) {
+        List<TaskDTO> tasks = TaskRepository.findHistoryByUser(userId);
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/nextTask/{userId}")
+    public ResponseEntity<List<TaskDTO>> getNextTasksByUserId(@PathVariable Long userId) {
+        Date now = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.add(Calendar.HOUR, 4);
+        Date fourHoursLater = calendar.getTime();
+
+        List<TaskDTO> tasks = TaskRepository.findNextTasks(userId, now, fourHoursLater);
+        return ResponseEntity.ok(tasks);
+    }
 
     @PutMapping("/{id}")
     public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
@@ -73,10 +92,8 @@ public class taskRestController {
                     existingTask.setVisible(true);
                     Task updatedTask = TaskRepository.save(existingTask);
 
-                    // Eliminar instancias recurrentes existentes
                     TaskRepository.deleteByParentId(updatedTask.getId());
 
-                    // Crear nuevas instancias recurrentes
                     if (updatedTask.getRecurrent() != null && !updatedTask.getRecurrent().equalsIgnoreCase("never") && updatedTask.getRepeatTimes() != null && updatedTask.getRepeatTimes() > 0) {
                         List<Task> recurringTasks = updatedTask.generateRecurringTasks();
                         TaskRepository.saveAll(recurringTasks);
