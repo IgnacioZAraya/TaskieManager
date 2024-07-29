@@ -1,11 +1,16 @@
 package com.project.demo.rest.user;
 
+import com.project.demo.logic.entity.level.Level;
+
+import com.project.demo.logic.entity.level.LevelRepository;
+import com.project.demo.logic.entity.level.LevelUserEnum;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -24,6 +29,8 @@ public class userRestController {
 
     @Autowired
     private RoleRepository RoleRepository;
+    @Autowired
+    private LevelRepository levelRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -40,6 +47,8 @@ public class userRestController {
     @PostMapping
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> addUser(@RequestBody User user) {
+
+        user.setExperience(10L);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Optional<Role> optionalRole = RoleRepository.findByName(RoleEnum.USER);
         Optional<User> optionalUser = UserRepository.findByEmail(user.getEmail());
@@ -47,12 +56,18 @@ public class userRestController {
         if (optionalRole.isEmpty() || optionalUser.isPresent()) {
             return null;
         }
+        Optional<Level> optionalLevel = levelRepository.findByName(LevelUserEnum.valueOf("Level_1"));
+        if (optionalLevel.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Default level 'Level_1' not found");
+        }
+
+        user.setLevel(optionalLevel.get());
 
         user.setRole(optionalRole.get());
         User savedUser = UserRepository.save(user);
+
         return ResponseEntity.ok(savedUser);
     }
-
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
         return UserRepository.findById(id).orElseThrow(RuntimeException::new);
@@ -64,7 +79,7 @@ public class userRestController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN', 'USER')")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return UserRepository.findById(id)
                 .map(existingUser -> {

@@ -1,6 +1,6 @@
 package com.project.demo.logic.entity.level;
 
-public enum LevelEnum {
+public enum LevelUserEnum {
     Level_1,
     Level_2,
     Level_3,

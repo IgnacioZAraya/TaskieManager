@@ -23,18 +23,18 @@ public class LevelSeeder implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     private void loadLevel(){
-        LevelEnum[] levelNames = new LevelEnum[] { LevelEnum.Level_1, LevelEnum.Level_2, LevelEnum.Level_3, LevelEnum.Level_4, LevelEnum.Level_5, LevelEnum.Level_6, LevelEnum.Level_7, LevelEnum.Level_8, LevelEnum.Level_9, LevelEnum.Level_10};
-        Map<LevelEnum, Long> levelValueMap = Map.of(
-                LevelEnum.Level_1, 100L,
-                LevelEnum.Level_2, 200L,
-                LevelEnum.Level_3, 300L,
-                LevelEnum.Level_4, 400L,
-                LevelEnum.Level_5, 500L,
-                LevelEnum.Level_6, 600L,
-                LevelEnum.Level_7, 700L,
-                LevelEnum.Level_8, 800L,
-                LevelEnum.Level_9, 900L,
-                LevelEnum.Level_10, 1000L
+        LevelUserEnum[] levelNames = new LevelUserEnum[] { LevelUserEnum.Level_1, LevelUserEnum.Level_2, LevelUserEnum.Level_3, LevelUserEnum.Level_4, LevelUserEnum.Level_5, LevelUserEnum.Level_6, LevelUserEnum.Level_7, LevelUserEnum.Level_8, LevelUserEnum.Level_9, LevelUserEnum.Level_10};
+        Map<LevelUserEnum, Long> levelValueMap = Map.of(
+                LevelUserEnum.Level_1, 100L,
+                LevelUserEnum.Level_2, 200L,
+                LevelUserEnum.Level_3, 300L,
+                LevelUserEnum.Level_4, 400L,
+                LevelUserEnum.Level_5, 500L,
+                LevelUserEnum.Level_6, 600L,
+                LevelUserEnum.Level_7, 700L,
+                LevelUserEnum.Level_8, 800L,
+                LevelUserEnum.Level_9, 900L,
+                LevelUserEnum.Level_10, 1000L
         );
 
         Arrays.stream(levelNames).forEach(levelName -> {
