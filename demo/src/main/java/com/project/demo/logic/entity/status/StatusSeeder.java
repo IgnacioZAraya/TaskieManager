@@ -22,13 +22,12 @@ public class StatusSeeder implements ApplicationListener<ContextRefreshedEvent> 
 
     }
     private void loadStatus(){
-        StatusEnum[] statusNames = new StatusEnum[] {StatusEnum.NORMAL,StatusEnum.HUNGRY,StatusEnum.UNHEALTHY,StatusEnum.SLEEPY};
+        StatusEnum[] statusNames = new StatusEnum[] {StatusEnum.ALIVE, StatusEnum.DEAD};
         Map<StatusEnum, String> stringDescriptionMap = Map.of(
-                StatusEnum.UNHEALTHY, "The taskie is unhealthy",
-                StatusEnum.NORMAL, "The taskie is 0k",
-                StatusEnum.SLEEPY, "The taskie is sleepy",
-                StatusEnum.HUNGRY, "The taskie is hungry"
+                StatusEnum.ALIVE, "The taskie is alive!!! Keep it up!!!!",
+                StatusEnum.DEAD, "The taskie is dead!!! Now you have to complete 10 task without failing in a row to get it back!"
         );
+
 
         Arrays.stream(statusNames).forEach((statusName) -> {
             Optional<Status> optionalStatus = statusRepository.findByName(statusName);
@@ -37,7 +36,8 @@ public class StatusSeeder implements ApplicationListener<ContextRefreshedEvent> 
                 Status statusToCreate = new Status();
 
                 statusToCreate.setName(statusName);
-                statusToCreate.setDescripcion(stringDescriptionMap.get(statusName));
+                statusToCreate.setDescription(stringDescriptionMap.get(statusName));
+
 
                 statusRepository.save(statusToCreate);
             });

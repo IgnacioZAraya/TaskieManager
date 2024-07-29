@@ -19,26 +19,47 @@ public class CosmeticSeeder implements ApplicationListener<ContextRefreshedEvent
     }
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) { this.loadCosmetics();
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) { this.loadCosmetics();
 
     }
     private void loadCosmetics(){
-        CosmeticEnum[] CosmeticNames = new CosmeticEnum[] {CosmeticEnum.SOAP,CosmeticEnum.FOOTBALL,CosmeticEnum.SHAMPOO};
+        CosmeticEnum[] cosmeticNames = new CosmeticEnum[] {CosmeticEnum.SHAMPOO,CosmeticEnum.FOOTBALL,CosmeticEnum.FOOD};
         Map<CosmeticEnum, String> stringSpritesMap = Map.of(
-                CosmeticEnum.SOAP, "../../../assets/cosmetics/soap.png",
-                CosmeticEnum.FOOTBALL, "../../../assets/cosmetics/football.png",
-                CosmeticEnum.SHAMPOO, "../../../assets/cosmetics/shampoo.png"
+                CosmeticEnum.FOOD, "../../../assets/cosmeticsV1/Food.png",
+                CosmeticEnum.FOOTBALL, "../../../assets/cosmeticsV1/Football.png",
+                CosmeticEnum.SHAMPOO, "../../../assets/cosmeticsV1/Shampoo.png"
 
         );
+        Map<CosmeticEnum, Integer> hungerEffectMap = Map.of(
+                CosmeticEnum.FOOD, 30,
+                CosmeticEnum.FOOTBALL, 0,
+                CosmeticEnum.SHAMPOO, 0
+        );
 
-        Arrays.stream(CosmeticNames).forEach((CosmeticName) -> {
-            Optional<Cosmetic> optionalCosmetic = cosmeticRepository.findByName(CosmeticName);
+        Map<CosmeticEnum, Integer> energyEffectmap = Map.of(
+                CosmeticEnum.FOOD, 0,
+                CosmeticEnum.FOOTBALL, 30,
+                CosmeticEnum.SHAMPOO, 0
+        );
+
+        Map<CosmeticEnum, Integer> dirtynessEffectMap = Map.of(
+                CosmeticEnum.FOOD, 0,
+                CosmeticEnum.FOOTBALL, 0,
+                CosmeticEnum.SHAMPOO, 30
+        );
+
+
+        Arrays.stream(cosmeticNames).forEach((cosmeticName) -> {
+            Optional<Cosmetic> optionalCosmetic = cosmeticRepository.findByName(cosmeticName);
 
             optionalCosmetic.ifPresentOrElse(System.out::println, () -> {
                 Cosmetic CosmeticToCreate = new Cosmetic();
 
-                CosmeticToCreate.setName(CosmeticName);
-                CosmeticToCreate.setSprite(stringSpritesMap.get(CosmeticName));
+                CosmeticToCreate.setName(cosmeticName);
+                CosmeticToCreate.setSprite(stringSpritesMap.get(cosmeticName));
+                CosmeticToCreate.setHungerEffect(hungerEffectMap.get(cosmeticName));
+                CosmeticToCreate.setDirtynessEffect(dirtynessEffectMap.get(cosmeticName));
+                CosmeticToCreate.setEnergyEffect(energyEffectmap.get(cosmeticName));
 
                 cosmeticRepository.save(CosmeticToCreate);
             });
