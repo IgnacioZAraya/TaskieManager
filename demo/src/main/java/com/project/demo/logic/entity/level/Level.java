@@ -17,18 +17,18 @@ public class Level {
 
     @Column(unique = true, nullable = false)
     @Enumerated(EnumType.STRING)
-    private LevelEnum name;
+    private LevelUserEnum name;
     private Long value;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "prize_id", referencedColumnName = "id")
     private Prize prize;
 
-    public LevelEnum getName() {
+    public LevelUserEnum getName() {
         return name;
     }
 
-    public void setName(LevelEnum name) {
+    public void setName(LevelUserEnum name) {
         this.name = name;
     }
 
