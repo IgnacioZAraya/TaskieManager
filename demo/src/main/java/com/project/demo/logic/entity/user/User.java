@@ -1,5 +1,9 @@
 package com.project.demo.logic.entity.user;
+import com.project.demo.logic.entity.level.Level;
 import com.project.demo.logic.entity.rol.Role;
+import com.project.demo.logic.entity.specie.Specie;
+import com.project.demo.logic.entity.task.Task;
+import com.project.demo.logic.entity.taskie.Taskie;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -25,6 +29,29 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "level_id", referencedColumnName = "id")
+    private Level level;
+
+    private Long experience;
+
+    private Long foodUser;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "taskie_id", referencedColumnName = "id")
+    private Taskie taskie;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "specie_id", referencedColumnName = "id")
+    private Specie specie;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "task_id", referencedColumnName = "id")
+    private Task task;
+
+    //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    //    private List<Task> tasks;
+
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
     private Date createdAt;
@@ -39,7 +66,7 @@ public class User implements UserDetails {
         return List.of(authority);
     }
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
 
@@ -127,6 +154,54 @@ public class User implements UserDetails {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
+    }
+
+    public Long getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Long experience) {
+        this.experience = experience;
+    }
+
+    public Long getFoodUser() {
+        return foodUser;
+    }
+
+    public void setFoodUser(Long foodUser) {
+        this.foodUser = foodUser;
+    }
+
+    public Taskie getTaskie() {
+        return taskie;
+    }
+
+    public void setTaskie(Taskie taskie) {
+        this.taskie = taskie;
+    }
+
+    public Specie getSpecie() {
+        return specie;
+    }
+
+    public void setSpecie(Specie specie) {
+        this.specie = specie;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     public Role getRole() {
