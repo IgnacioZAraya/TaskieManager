@@ -49,6 +49,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     private Task task;
 
+    //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    //    private List<Task> tasks;
+
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
     private Date createdAt;

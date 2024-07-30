@@ -1,14 +1,20 @@
 package com.project.demo.logic.entity.task;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.demo.logic.entity.food.FoodEnum;
 import com.project.demo.logic.entity.prize.Prize;
+import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.unlock.Unlock;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "task")
 @Entity
@@ -23,13 +29,28 @@ public class Task {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    private Integer priority;
+    private String recurrent;
+
+    private Long repeatTimes;
+
+    private Long parentId;
+    @Transient
+    private Long userId;
+
+    private String priority;
 
     private String description;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date startDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date endDate;
+
+    private boolean visible;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "prize_id", referencedColumnName = "id")
     private Prize prize;
@@ -51,6 +72,13 @@ public class Task {
         return id;
     }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -72,11 +100,11 @@ public class Task {
         this.user = user;
     }
 
-    public Integer getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Integer priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
@@ -136,15 +164,110 @@ public class Task {
         this.updatedAt = updatedAt;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     public Boolean getVerified() {
         return verified;
     }
 
     public void setVerified(Boolean verified) {
-        this.verified = verified;
+            this.verified = verified;
+        }
+
+    public String getRecurrent() {
+        return recurrent;
+    }
+
+    public void setRecurrent(String recurrent) {
+        this.recurrent = recurrent;
+    }
+
+    public Long getRepeatTimes() {
+        return repeatTimes;
+    }
+
+    public void setRepeatTimes(Long repeatTimes) {
+        this.repeatTimes = repeatTimes;
     }
 
     public Task() {
     }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Task taskWithNewDates(Date newStartDate, Date newEndDate) {
+        Task newTask = new Task();
+        newTask.setName(this.name);
+        newTask.setUser(this.user);
+        newTask.setPriority(this.priority);
+        newTask.setDescription(this.description);
+        newTask.setStartDate(newStartDate);
+        newTask.setEndDate(newEndDate);
+        newTask.setPrize(this.prize);
+        newTask.setCompleted(this.isCompleted);
+        newTask.setVerified(this.verified);
+        newTask.setRecurrent(this.recurrent);
+        newTask.setRepeatTimes(this.repeatTimes);
+        newTask.setVisible(true);
+        newTask.setParentId(this.id);  // Set the parentId to the id of the original task
+        return newTask;
+    }
+
+    public List<Task> generateRecurringTasks() {
+        List<Task> recurringTasks = new ArrayList<>();
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(this.getStartDate());
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(this.getEndDate());
+
+        String recurrence = this.getRecurrent();
+        int repeatCount = 0;
+
+        while (repeatCount < this.getRepeatTimes()) {
+            switch (recurrence.toLowerCase()) {
+                case "daily":
+                    startCalendar.add(Calendar.DATE, 1);
+                    endCalendar.add(Calendar.DATE, 1);
+                    break;
+                case "weekly":
+                    startCalendar.add(Calendar.WEEK_OF_YEAR, 1);
+                    endCalendar.add(Calendar.WEEK_OF_YEAR, 1);
+                    break;
+                case "monthly":
+                    startCalendar.add(Calendar.MONTH, 1);
+                    endCalendar.add(Calendar.MONTH, 1);
+                    break;
+                case "yearly":
+                    startCalendar.add(Calendar.YEAR, 1);
+                    endCalendar.add(Calendar.YEAR, 1);
+                    break;
+                default:
+                    break;
+            }
+
+            Date newStartDate = startCalendar.getTime();
+            Date newEndDate = endCalendar.getTime();
+
+            Task newTask = this.taskWithNewDates(newStartDate, newEndDate);
+            recurringTasks.add(newTask);
+
+            repeatCount++;
+        }
+
+        return recurringTasks;
+    }
 }
+
 
