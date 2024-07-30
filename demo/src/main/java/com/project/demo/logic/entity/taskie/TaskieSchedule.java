@@ -1,3 +1,4 @@
+
 package com.project.demo.logic.entity.taskie;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,10 @@ public class TaskieSchedule {
 
             if (reduceLifeBy > 0 && taskie.getLife() > 0) {
                 taskie.setLife(Math.max(taskie.getLife() - reduceLifeBy, 0));
+            }
+
+            if (taskie.getCleanse() > 50 && taskie.getHunger() > 50 && taskie.getEnergy() > 50 && taskie.getLife() < 100) {
+                taskie.setLife(Math.min(taskie.getLife() + 1, 100));
             }
 
             taskieRepository.save(taskie);
