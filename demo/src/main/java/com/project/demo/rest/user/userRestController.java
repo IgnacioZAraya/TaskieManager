@@ -86,6 +86,8 @@ public class userRestController {
                     existingUser.setName(user.getName());
                     existingUser.setLastname(user.getLastname());
                     existingUser.setEmail(user.getEmail());
+                    existingUser.setFoodUser(user.getFoodUser());
+                    existingUser.setCleanerUser(user.getCleanerUser());
                     return UserRepository.save(existingUser);
                 })
                 .orElseGet(() -> {
