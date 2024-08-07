@@ -12,42 +12,42 @@ import java.util.List;
 @RequestMapping("/specie")
 public class specieRestController {
     @Autowired
-    private SpecieRepository SpecieRepository;
-
+    private SpecieRepository specieRepository;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
     public List<Specie> getAllSpecie() {
-        return (List<Specie>) SpecieRepository.findAll();
+        return (List<Specie>) specieRepository.findAll();
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
     public Specie addSpecie(@RequestBody Specie specie) {
-        return SpecieRepository.save(specie);
+        return specieRepository.save(specie);
     }
 
     @GetMapping("/{id}")
     public Specie getSpecieById(@PathVariable Long id) {
-        return SpecieRepository.findById(id).orElseThrow(RuntimeException::new);
+        return specieRepository.findById(id).orElseThrow(() -> new RuntimeException("Specie not found"));
     }
 
     @PutMapping("/{id}")
     public Specie updateSpecie(@PathVariable Long id, @RequestBody Specie specie) {
-        return SpecieRepository.findById(id)
+        return specieRepository.findById(id)
                 .map(existingSpecie -> {
-                    existingSpecie.setName(existingSpecie.getName());
-                    existingSpecie.setDescription(existingSpecie.getDescription());
-                    return SpecieRepository.save(existingSpecie);
+                    existingSpecie.setName(specie.getName());
+                    existingSpecie.setDescription(specie.getDescription());
+                    existingSpecie.setSprite(specie.getSprite());
+                    return specieRepository.save(existingSpecie);
                 })
                 .orElseGet(() -> {
                     specie.setId(id);
-                    return SpecieRepository.save(specie);
+                    return specieRepository.save(specie);
                 });
     }
+
     @DeleteMapping("/{id}")
     public void deleteSpecie(@PathVariable Long id) {
-        SpecieRepository.deleteById(id);
+        specieRepository.deleteById(id);
     }
-
-
 }

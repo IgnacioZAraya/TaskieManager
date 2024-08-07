@@ -1,6 +1,5 @@
 package com.project.demo.logic.entity.specie;
 
-import com.project.demo.logic.entity.experience.ExperienceEnum;
 import jakarta.persistence.*;
 
 @Table(name = "specie")
@@ -16,6 +15,8 @@ public class Specie {
     private SpecieEnum name;
 
     private String description;
+
+    private String sprite;
 
     public Specie() {
     }
@@ -42,5 +43,13 @@ public class Specie {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSprite() {
+        return sprite;
+    }
+
+    public void setSprite(String sprite) {
+        this.sprite = sprite;
     }
 }

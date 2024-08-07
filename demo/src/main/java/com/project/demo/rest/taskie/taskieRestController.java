@@ -46,7 +46,7 @@ public class taskieRestController {
         taskie.setSpecie(specieRepository.findById(taskie.getSpecie().getId())
                 .orElseThrow(() -> new RuntimeException("Specie not found")));
 
-        taskie.setAlive(statusRepository.findById(taskie.getAlive().getId())
+        taskie.setStatus(statusRepository.findById(taskie.getStatus().getId())
                 .orElseThrow(() -> new RuntimeException("Status not found")));
 
         taskie.setUser(userRepository.findById(taskie.getUser().getId())
@@ -74,7 +74,7 @@ public class taskieRestController {
     }
 
     @GetMapping("/userId/{userId}")
-    public ResponseEntity<List<TaskieDTO>> GetTaskieByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<TaskieDTO>> getTaskieByUser(@PathVariable Long userId) {
         List<TaskieDTO> taskies = taskieRepository.findByUser(userId);
         return ResponseEntity.ok(taskies);
     }
@@ -91,7 +91,6 @@ public class taskieRestController {
                     existingTaskie.setCleanse(taskie.getCleanse());
                     existingTaskie.setEnergy(taskie.getEnergy());
                     existingTaskie.setExperience(taskie.getExperience());
-                    existingTaskie.setSprite(taskie.getSprite());
                     return taskieRepository.save(existingTaskie);
                 })
                 .orElseGet(() -> {
@@ -105,5 +104,3 @@ public class taskieRestController {
         taskieRepository.deleteById(id);
     }
 }
-
-

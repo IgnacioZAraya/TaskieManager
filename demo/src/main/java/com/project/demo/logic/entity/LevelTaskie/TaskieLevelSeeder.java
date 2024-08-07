@@ -8,6 +8,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 @Component
@@ -26,40 +27,34 @@ public class TaskieLevelSeeder implements ApplicationListener<ContextRefreshedEv
 
     }
 
-    private void loadLevels(){
-        LevelEnum[] levelEnums = new LevelEnum[] {LevelEnum.Nivel_1, LevelEnum.Nivel_2, LevelEnum.Nivel_3, LevelEnum.Nivel_4, LevelEnum.Nivel_5,LevelEnum.Nivel_6, LevelEnum.Nivel_7, LevelEnum.Nivel_8, LevelEnum.Nivel_9, LevelEnum.Nivel_10,LevelEnum.Nivel_11, LevelEnum.Nivel_12, LevelEnum.Nivel_13, LevelEnum.Nivel_14, LevelEnum.Nivel_15,LevelEnum.Nivel_16, LevelEnum.Nivel_17, LevelEnum.Nivel_18, LevelEnum.Nivel_19, LevelEnum.Nivel_20,LevelEnum.Nivel_21, LevelEnum.Nivel_22, LevelEnum.Nivel_23, LevelEnum.Nivel_24, LevelEnum.Nivel_25,};
-        Map<LevelEnum, CosmeticEnum> stringCosmeticMap = Map.of(
-          LevelEnum.Nivel_5, CosmeticEnum.FOOD,
-          LevelEnum.Nivel_10,CosmeticEnum.FOOTBALL,
-          LevelEnum.Nivel_15,CosmeticEnum.SHAMPOO
-
+    private void loadLevels() {
+        Map<LevelEnum, CosmeticEnum> levelCosmeticMap = Map.of(
+                LevelEnum.Nivel_5, CosmeticEnum.FOOD,
+                LevelEnum.Nivel_10, CosmeticEnum.FOOTBALL,
+                LevelEnum.Nivel_15, CosmeticEnum.SHAMPOO
         );
-        
 
-        Arrays.stream(levelEnums).forEach((levelEnum -> {
+        EnumMap<LevelEnum, Long> levelExperienceMap = new EnumMap<>(LevelEnum.class);
+        for (int i = 0; i < LevelEnum.values().length; i++) {
+            levelExperienceMap.put(LevelEnum.values()[i], (i + 1) * 25L);
+        }
+
+        Arrays.stream(LevelEnum.values()).forEach(levelEnum -> {
             Optional<TaskieLevel> optionalTaskieLevel = levelTaskieRepository.findByName(levelEnum);
-            Optional<Cosmetic> optionalCosmetic = cosmeticRepository.findByName(stringCosmeticMap.get(levelEnum));
+            Optional<Cosmetic> optionalCosmetic = Optional.ofNullable(levelCosmeticMap.get(levelEnum))
+                    .flatMap(cosmeticRepository::findByName);
 
-            optionalTaskieLevel.ifPresentOrElse(System.out::println, () ->{
-                TaskieLevel taskieLevelToCreate = new TaskieLevel();
-
-                taskieLevelToCreate.setName(levelEnum);
-                if (optionalCosmetic.isEmpty() ) {
-                    taskieLevelToCreate.setCosmetic(null);
-                }else{
-                    taskieLevelToCreate.setCosmetic(optionalCosmetic.get());
-                }
-
-                if(taskieLevelToCreate.getName() != LevelEnum.Nivel_15) {
-                    taskieLevelToCreate.setHasEvolution(false);
-                }else{
-                    taskieLevelToCreate.setHasEvolution(true);
-                }
-
-                levelTaskieRepository.save(taskieLevelToCreate);
-            });
-
-        }));
-
+            optionalTaskieLevel.ifPresentOrElse(
+                    System.out::println,
+                    () -> {
+                        TaskieLevel taskieLevelToCreate = new TaskieLevel();
+                        taskieLevelToCreate.setName(levelEnum);
+                        taskieLevelToCreate.setValue(levelExperienceMap.get(levelEnum));
+                        taskieLevelToCreate.setCosmetic(optionalCosmetic.orElse(null));
+                        taskieLevelToCreate.setHasEvolution(levelEnum == LevelEnum.Nivel_15);
+                        levelTaskieRepository.save(taskieLevelToCreate);
+                    }
+            );
+        });
     }
 }
