@@ -1,5 +1,7 @@
 package com.project.demo.rest.user;
 
+import com.project.demo.logic.entity.auth.AuthenticationService;
+import com.project.demo.logic.entity.email.EmailService;
 import com.project.demo.logic.entity.level.Level;
 
 import com.project.demo.logic.entity.level.LevelRepository;
@@ -18,8 +20,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/users")
@@ -35,8 +40,17 @@ public class userRestController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailService emailService;
+
+    private final AuthenticationService authenticationService;
+
+    public userRestController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
+
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole( 'SUPER_ADMIN')")
     public List<User> getAllUsers() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User authenticatedUser = (User) authentication.getPrincipal();
@@ -49,8 +63,12 @@ public class userRestController {
     public ResponseEntity<?> addUser(@RequestBody User user) {
 
         user.setExperience(10L);
+        user.setFoodUser(10L);
+        user.setCleanerUser(10L);
+        user.setKid(false);
+        user.setPrivateCode(null);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Optional<Role> optionalRole = RoleRepository.findByName(RoleEnum.USER);
+        Optional<Role> optionalRole = RoleRepository.findByName(RoleEnum.BASE);
         Optional<User> optionalUser = UserRepository.findByEmail(user.getEmail());
 
         if (optionalRole.isEmpty() || optionalUser.isPresent()) {
@@ -68,6 +86,32 @@ public class userRestController {
 
         return ResponseEntity.ok(savedUser);
     }
+
+    @PutMapping("/email/{id}")
+    public String sendEmailUser (@PathVariable Long id, @RequestBody User user) throws IOException {
+        Random random = new Random();
+        int min = 100000;
+        int max = 999999;
+
+        int privateCode = random.nextInt(max - min + 1) + min;
+
+
+         UserRepository.findById(id)
+                .map(existingUser -> {
+
+                    existingUser.setPrivateCode(privateCode);
+
+                    return UserRepository.save(existingUser);
+
+                })
+                .orElseGet(() -> {
+                    user.setId(id);
+                    return UserRepository.save(user);
+                });
+
+        return emailService.sendTextEmail(user.getEmail(), privateCode);
+    }
+
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
         return UserRepository.findById(id).orElseThrow(RuntimeException::new);
@@ -79,7 +123,7 @@ public class userRestController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ASSOCIATE', 'BASE')")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return UserRepository.findById(id)
                 .map(existingUser -> {
@@ -89,6 +133,64 @@ public class userRestController {
                     existingUser.setFoodUser(user.getFoodUser());
                     existingUser.setCleanerUser(user.getCleanerUser());
                     return UserRepository.save(existingUser);
+                })
+                .orElseGet(() -> {
+                    user.setId(id);
+                    return UserRepository.save(user);
+                });
+    }
+
+    @PutMapping("/profile/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ASSOCIATE', 'BASE')")
+    public User updateProfileUser(@PathVariable Long id, @RequestBody User user) {
+        user.setId(id);
+        User authenticatedUserProfile = authenticationService.authenticateId(user);
+
+        return UserRepository.findById(id)
+                .map(existingUser -> {
+                    if (authenticatedUserProfile == null){
+                        existingUser.setId(id);
+                        return UserRepository.save(existingUser);
+                    }
+                    existingUser.setName(user.getName());
+                    existingUser.setLastname(user.getLastname());
+                    existingUser.setEmail(user.getEmail());
+                    existingUser.setFoodUser(user.getFoodUser());
+                    existingUser.setCleanerUser(user.getCleanerUser());
+                    return UserRepository.save(existingUser);
+
+                })
+                .orElseGet(() -> {
+                    user.setId(id);
+                    return UserRepository.save(user);
+                });
+    }
+
+    @PutMapping("/associate/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ASSOCIATE', 'BASE')")
+    public User updateAssociateUser(@PathVariable Long id, @RequestBody User user) {
+        return UserRepository.findById(id)
+                .map(existingUser -> {
+                    if (!Objects.equals(existingUser.getPrivateCode(), user.getPrivateCode())) {
+                        existingUser.setId(id);
+                        return UserRepository.save(existingUser);
+                    }
+                    existingUser.setName(user.getName());
+                    existingUser.setLastname(user.getLastname());
+                    existingUser.setEmail(user.getEmail());
+                    existingUser.setFoodUser(user.getFoodUser());
+                    existingUser.setCleanerUser(user.getCleanerUser());
+
+                    Optional<Role> optionalRole = RoleRepository.findByName(RoleEnum.ASSOCIATE);
+
+                    if (optionalRole.isEmpty()) {
+                        return null;
+                    }
+
+                    existingUser.setRole(optionalRole.get());
+                    
+                    return UserRepository.save(existingUser);
+
                 })
                 .orElseGet(() -> {
                     user.setId(id);
