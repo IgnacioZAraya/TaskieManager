@@ -1,7 +1,5 @@
 package com.project.demo.logic.entity.status;
 
-import com.project.demo.logic.entity.specie.Specie;
-import com.project.demo.logic.entity.specie.SpecieEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,33 +1,12 @@
 package com.project.demo.logic.entity.specie;
 
-import jakarta.persistence.*;
 
-@Table(name = "specie")
-@Entity
-public class Specie {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
-    private Long id;
-
-    @Column(unique = true, nullable = false)
+public class SpecieDTO {
     private String name;
-
     private String description;
+    private String sprite;  // Este campo contendrá la ruta de la imagen
 
-    private String sprite;
-
-    public Specie() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // Getters y Setters
     public String getName() {
         return name;
     }
