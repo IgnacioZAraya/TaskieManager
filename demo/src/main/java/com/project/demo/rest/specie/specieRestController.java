@@ -71,20 +71,39 @@ public class specieRestController {
     }
 
     @PutMapping("/{id}")
-    public Specie updateSpecie(@PathVariable Long id, @RequestBody Specie specie) {
-        return specieRepository.findById(id)
-                .map(existingSpecie -> {
-                    existingSpecie.setName(specie.getName());
-                    existingSpecie.setDescription(specie.getDescription());
-                    existingSpecie.setSprite(specie.getSprite());
-                    return specieRepository.save(existingSpecie);
-                })
-                .orElseGet(() -> {
-                    specie.setId(id);
-                    return specieRepository.save(specie);
-                });
-    }
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public Specie updateSpecie(
+            @PathVariable Long id,
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam(value = "file", required = false) MultipartFile file) {
+        Specie specie = specieRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Specie not found"));
 
+        specie.setName(name);
+        specie.setDescription(description);
+
+        if (file != null) {
+            String directory = "D:\\Tarea_2\\TaskieTamer_Front\\src\\assets\\taskies";
+            Path path = Paths.get(directory);
+
+            try {
+                if (!Files.exists(path)) {
+                    Files.createDirectories(path);
+                }
+
+                String fileName = file.getOriginalFilename();
+                Path filePath = path.resolve(fileName);
+                Files.write(filePath, file.getBytes());
+                specie.setSprite("../../../assets/taskies/" + fileName);
+
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to save file", e);
+            }
+        }
+
+        return specieRepository.save(specie);
+    }
     @DeleteMapping("/{id}")
     public void deleteSpecie(@PathVariable Long id) {
         specieRepository.deleteById(id);
