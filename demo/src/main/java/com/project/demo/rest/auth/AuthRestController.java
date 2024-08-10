@@ -70,7 +70,7 @@ public class AuthRestController {
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         user.setExperience(10L);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER);
+        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.BASE);
 
         if (optionalRole.isEmpty()) {
             return null;
