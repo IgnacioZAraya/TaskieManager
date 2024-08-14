@@ -40,28 +40,35 @@ public class specieRestController {
     public Specie getSpecieById(@PathVariable Long id) {
         return specieRepository.findById(id).orElseThrow(() -> new RuntimeException("Specie not found"));
     }
+
     @PostMapping("/addSpecie")
     public Specie addSpecie(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("evolution") MultipartFile evolutionFile) {
+
         String directory = "D:\\Tarea_2\\TaskieTamer_Front\\src\\assets\\taskies";
         Path path = Paths.get(directory);
 
         try {
-                        if (!Files.exists(path)) {
+            if (!Files.exists(path)) {
                 Files.createDirectories(path);
             }
-
 
             String fileName = file.getOriginalFilename();
             Path filePath = path.resolve(fileName);
             Files.write(filePath, file.getBytes());
 
+            String evolutionFileName = evolutionFile.getOriginalFilename();
+            Path evolutionFilePath = path.resolve("evolution/" + evolutionFileName);
+            Files.write(evolutionFilePath, evolutionFile.getBytes());
+
             Specie specie = new Specie();
             specie.setName(name);
             specie.setDescription(description);
             specie.setSprite("../../../assets/taskies/" + fileName);
+            specie.setEvolution("../../../assets/taskies/evolution/" + evolutionFileName);
 
             return specieRepository.save(specie);
 
@@ -76,33 +83,40 @@ public class specieRestController {
             @PathVariable Long id,
             @RequestParam("name") String name,
             @RequestParam("description") String description,
-            @RequestParam(value = "file", required = false) MultipartFile file) {
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "evolution", required = false) MultipartFile evolutionFile) {
+
         Specie specie = specieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Specie not found"));
 
         specie.setName(name);
         specie.setDescription(description);
 
-        if (file != null) {
-            String directory = "D:\\Tarea_2\\TaskieTamer_Front\\src\\assets\\taskies";
-            Path path = Paths.get(directory);
+        String directory = "D:\\Tarea_2\\TaskieTamer_Front\\src\\assets\\taskies";
+        Path path = Paths.get(directory);
 
-            try {
-                if (!Files.exists(path)) {
-                    Files.createDirectories(path);
-                }
+        try {
+            if (file != null) {
 
                 String fileName = file.getOriginalFilename();
                 Path filePath = path.resolve(fileName);
                 Files.write(filePath, file.getBytes());
                 specie.setSprite("../../../assets/taskies/" + fileName);
-
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to save file", e);
             }
-        }
 
-        return specieRepository.save(specie);
+            if (evolutionFile != null) {
+
+                String evolutionFileName = evolutionFile.getOriginalFilename();
+                Path evolutionFilePath = path.resolve("evolution/" + evolutionFileName);
+                Files.write(evolutionFilePath, evolutionFile.getBytes());
+                specie.setEvolution("../../../assets/taskies/evolution/" + evolutionFileName);
+            }
+
+            return specieRepository.save(specie);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save file or specie", e);
+        }
     }
     @DeleteMapping("/{id}")
     public void deleteSpecie(@PathVariable Long id) {

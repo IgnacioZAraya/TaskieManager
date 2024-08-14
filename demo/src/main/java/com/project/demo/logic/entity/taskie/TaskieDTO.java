@@ -13,15 +13,15 @@ public class TaskieDTO {
     private Long id;
 
 
-    private Specie specie;
+    private Long specieId;
 
     private String name;
 
 
-    private Status status;
+    private Long statusId;
 
 
-    private User user;
+    private Long userId;
     private Long experience;
 
 
@@ -35,13 +35,7 @@ public class TaskieDTO {
 
     private Integer energy;
 
-    public Status getAlive() {
-        return status;
-    }
 
-    public void setAlive(Status status) {
-        this.status = status;
-    }
 
     public Integer getLife() {
         return life;
@@ -83,13 +77,6 @@ public class TaskieDTO {
         this.id = id;
     }
 
-    public Specie getSpecie() {
-        return specie;
-    }
-
-    public void setSpecie(Specie specie) {
-        this.specie = specie;
-    }
 
     public String getName() {
         return name;
@@ -99,13 +86,7 @@ public class TaskieDTO {
         this.name = name;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public boolean isVisible() {
         return visible;
@@ -125,13 +106,36 @@ public class TaskieDTO {
     }
 
 
+    public Long getSpecieId() {
+        return specieId;
+    }
 
-    public TaskieDTO(Long id, Specie specie, String name, Status alive, User user, Long experience, boolean visible, Integer life, Integer cleanse, Integer hunger, Integer energy) {
+    public void setSpecieId(Long specieId) {
+        this.specieId = specieId;
+    }
+
+    public Long getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Long statusId) {
+        this.statusId = statusId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public TaskieDTO(Long id, Long specieId, String name, Long statusId, Long userId, Long experience, boolean visible, Integer life, Integer cleanse, Integer hunger, Integer energy) {
         this.id = id;
-        this.specie = specie;
+        this.specieId = specieId;
         this.name = name;
-        this.status = alive;
-        this.user = user;
+        this.statusId = statusId;
+        this.userId = userId;
         this.experience = experience;
         this.visible = visible;
         this.life = life;

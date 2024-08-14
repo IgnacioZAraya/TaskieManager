@@ -141,4 +141,6 @@ public class Taskie {
     public void setLvlTaskie(TaskieLevel lvlTaskie) {
         this.lvlTaskie = lvlTaskie;
     }
+
+
 }

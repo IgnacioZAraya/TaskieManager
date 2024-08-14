@@ -37,6 +37,12 @@ public class SpecieSeeder implements ApplicationListener<ContextRefreshedEvent> 
                 "WOLF", "../../../assets/taskies/Lobo bb.png"
         );
 
+        Map<String, String> stringEvolutionMap = Map.of(
+                "AXOLOT", "../../../assets/taskies/evolution/Axolt.png",
+                "COCODRILE", "../../../assets/taskies/evolution/Croco.png",
+                "WOLF", "../../../assets/taskies/evolution/Lobo.png"
+        );
+
         Arrays.stream(specieNames).forEach(specieName -> {
             Optional<Specie> optionalSpecie = specieRepository.findByName(specieName);
 
@@ -44,6 +50,7 @@ public class SpecieSeeder implements ApplicationListener<ContextRefreshedEvent> 
                 Specie specieToCreate = new Specie();
                 specieToCreate.setName(specieName);
                 specieToCreate.setDescription(stringDescriptionMap.get(specieName));
+                specieToCreate.setEvolution(stringEvolutionMap.get(specieName));
                 specieToCreate.setSprite(stringSpriteMap.get(specieName));
 
                 specieRepository.save(specieToCreate);

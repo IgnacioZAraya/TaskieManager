@@ -17,6 +17,8 @@ public class Specie {
 
     private String sprite;
 
+    private String evolution;
+
     public Specie() {
     }
 
@@ -50,5 +52,13 @@ public class Specie {
 
     public void setSprite(String sprite) {
         this.sprite = sprite;
+    }
+
+    public String getEvolution() {
+        return evolution;
+    }
+
+    public void setEvolution(String evolution) {
+        this.evolution = evolution;
     }
 }

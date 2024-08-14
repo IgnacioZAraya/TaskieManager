@@ -3,11 +3,13 @@ package com.project.demo.rest.taskie;
 
 import com.project.demo.logic.entity.cosmetic.Cosmetic;
 import com.project.demo.logic.entity.cosmetic.CosmeticRepository;
+import com.project.demo.logic.entity.specie.Specie;
 import com.project.demo.logic.entity.specie.SpecieRepository;
 import com.project.demo.logic.entity.status.StatusRepository;
 import com.project.demo.logic.entity.taskie.Taskie;
 import com.project.demo.logic.entity.taskie.TaskieDTO;
 import com.project.demo.logic.entity.taskie.TaskieRepository;
+import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,19 +44,29 @@ public class taskieRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Taskie> addTaskie(@RequestBody Taskie taskie) {
-        taskie.setSpecie(specieRepository.findById(taskie.getSpecie().getId())
-                .orElseThrow(() -> new RuntimeException("Specie not found")));
+    public ResponseEntity<Taskie> addTaskie(@RequestBody TaskieDTO taskieDTO) {
+        Specie specie = specieRepository.findById(taskieDTO.getSpecieId())
+                .orElseThrow(() -> new RuntimeException("Specie not found"));
 
-        taskie.setStatus(statusRepository.findById(taskie.getStatus().getId())
-                .orElseThrow(() -> new RuntimeException("Status not found")));
+        User user = userRepository.findById(taskieDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        taskie.setUser(userRepository.findById(taskie.getUser().getId())
-                .orElseThrow(() -> new RuntimeException("User not found")));
+        Taskie taskie = new Taskie();
+        taskie.setName(taskieDTO.getName());
+        taskie.setSpecie(specie);
+        taskie.setUser(user);
+        taskie.setLife(100);
+        taskie.setEnergy(100);
+        taskie.setCleanse(100);
+        taskie.setHunger(100);
+        taskie.setExperience(0L);
+        taskie.setVisible(true);
+        taskie.setStatus(statusRepository.findById(1L).orElseThrow(() -> new RuntimeException("Status not found")));
 
         Taskie savedTaskie = taskieRepository.save(taskie);
         return ResponseEntity.ok(savedTaskie);
     }
+
 
     @PutMapping("/{id}/apply-cosmetic")
     public ResponseEntity<Taskie> applyCosmetic(@PathVariable Long id, @RequestBody Map<String, Long> request) {
