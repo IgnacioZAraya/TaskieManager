@@ -8,15 +8,14 @@ import jakarta.persistence.*;
 public class TaskieLevel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
-    private Integer id;
+    private Long id;
 
 
     @OneToOne
     @JoinColumn(name = "cosmetic_id", referencedColumnName = "id")
     private Cosmetic cosmetic;
 
-
+    private Long value;
     private boolean hasEvolution;
 
     @Column(unique = true, nullable = false)
@@ -33,15 +32,22 @@ public class TaskieLevel {
         this.name = name;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
 
+    public Long getValue() {
+        return value;
+    }
+
+    public void setValue(Long value) {
+        this.value = value;
+    }
 
     public Cosmetic getCosmetic() {
         return cosmetic;
