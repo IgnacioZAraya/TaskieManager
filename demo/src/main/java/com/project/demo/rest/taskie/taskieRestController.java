@@ -1,8 +1,8 @@
 
 package com.project.demo.rest.taskie;
 
-import com.project.demo.logic.entity.cosmetic.Cosmetic;
-import com.project.demo.logic.entity.cosmetic.CosmeticRepository;
+import com.project.demo.logic.entity.interactable.Interactable;
+import com.project.demo.logic.entity.interactable.InteractableRepository;
 import com.project.demo.logic.entity.specie.SpecieRepository;
 import com.project.demo.logic.entity.status.StatusRepository;
 import com.project.demo.logic.entity.taskie.Taskie;
@@ -33,7 +33,7 @@ public class taskieRestController {
     private UserRepository userRepository;
 
     @Autowired
-    private CosmeticRepository cosmeticRepository;
+    private InteractableRepository interactableRepository;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
@@ -62,12 +62,12 @@ public class taskieRestController {
         Taskie taskie = taskieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Taskie not found"));
 
-        Cosmetic cosmetic = cosmeticRepository.findById(cosmeticId)
+        Interactable interactable = interactableRepository.findById(cosmeticId)
                 .orElseThrow(() -> new RuntimeException("Cosmetic not found"));
 
-        taskie.setCleanse(Math.min(taskie.getCleanse() + cosmetic.getDirtynessEffect(), 100));
-        taskie.setHunger(Math.min(taskie.getHunger() + cosmetic.getHungerEffect(), 100));
-        taskie.setEnergy(Math.min(taskie.getEnergy() + cosmetic.getEnergyEffect(), 100));
+        taskie.setCleanse(Math.min(taskie.getCleanse() + interactable.getDirtynessEffect(), 100));
+        taskie.setHunger(Math.min(taskie.getHunger() + interactable.getHungerEffect(), 100));
+        taskie.setEnergy(Math.min(taskie.getEnergy() + interactable.getEnergyEffect(), 100));
 
         Taskie updatedTaskie = taskieRepository.save(taskie);
         return ResponseEntity.ok(updatedTaskie);
