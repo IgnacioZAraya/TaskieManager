@@ -11,6 +11,10 @@ public class Prize {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PrizeEnum priority;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "experience_id", referencedColumnName = "id", nullable = false)
     private Experience experience;
@@ -41,6 +45,14 @@ public class Prize {
 
     public void setFood(Food food) {
         this.food = food;
+    }
+
+    public PrizeEnum getPriority() {
+        return priority;
+    }
+
+    public void setPriority(PrizeEnum priority) {
+        this.priority = priority;
     }
 
     public Prize() {

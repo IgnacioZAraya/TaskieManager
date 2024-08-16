@@ -11,8 +11,8 @@ public class Experience {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String name;
-
+    @Enumerated(EnumType.STRING)
+    private ExperienceEnum name;
 
     private Long value;
 
@@ -24,14 +24,13 @@ public class Experience {
         this.id = id;
     }
 
-    public String getName() {
+    public ExperienceEnum getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(ExperienceEnum name) {
         this.name = name;
     }
-
     public Long getValue() {
         return value;
     }

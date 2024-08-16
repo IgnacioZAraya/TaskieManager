@@ -37,7 +37,6 @@ public class foodRestController {
                 .map(existingFood -> {
                     existingFood.setName(existingFood.getName());
                     existingFood.setValue(existingFood.getValue());
-                    existingFood.setSpeciesFav(existingFood.getSpeciesFav());
                     return FoodRepository.save(existingFood);
                 })
                 .orElseGet(() -> {
