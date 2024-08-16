@@ -49,6 +49,14 @@ public class User implements UserDetails {
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     private Task task;
 
+    private Integer privateCode;
+
+    private Long cleanerUser;
+
+    private Boolean isKid;
+
+    private Boolean visible;
+
     //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     //    private List<Task> tasks;
 
@@ -206,6 +214,38 @@ public class User implements UserDetails {
 
     public Role getRole() {
         return role;
+    }
+
+    public Integer getPrivateCode() {
+        return privateCode;
+    }
+
+    public void setPrivateCode(Integer privateCode) {
+        this.privateCode = privateCode;
+    }
+
+    public Long getCleanerUser() {
+        return cleanerUser;
+    }
+
+    public void setCleanerUser(Long cleanerUser) {
+        this.cleanerUser = cleanerUser;
+    }
+
+    public Boolean getKid() {
+        return isKid;
+    }
+
+    public void setKid(Boolean kid) {
+        isKid = kid;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
     }
 
     public User setRole(Role role) {
