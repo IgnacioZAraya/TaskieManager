@@ -11,39 +11,50 @@ import java.util.Optional;
 
 @Component
 public class SpecieSeeder implements ApplicationListener<ContextRefreshedEvent> {
-
     private final SpecieRepository specieRepository;
-    public SpecieSeeder (SpecieRepository specieRepository) {
+
+    public SpecieSeeder(SpecieRepository specieRepository) {
         this.specieRepository = specieRepository;
     }
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) { this.loadSpecies();
+    public void onApplicationEvent(ContextRefreshedEvent event) { this.loadSpecies();
 
     }
+    private void loadSpecies() {
+        String[] specieNames = new String[] {"AXOLOT", "COCODRILE", "WOLF"};
 
-    private void loadSpecies(){
-        SpecieEnum[] specieNames = new SpecieEnum[] {SpecieEnum.AXOLOT, SpecieEnum.CAT, SpecieEnum.COCODRILE, SpecieEnum.WOLF, SpecieEnum.ROBOT, SpecieEnum.SLOTH};
-        Map<SpecieEnum, String> stringDescriptionMap = Map.of(
-                SpecieEnum.CAT, "Its a Cat perfect for",
-                SpecieEnum.AXOLOT, "Its a Axolot perfect for",
-                SpecieEnum.SLOTH, "Its a Sloth perfect for",
-                SpecieEnum.WOLF, "Its a Wolf perfecto for",
-                SpecieEnum.ROBOT, "Its a Robot perfect for",
-                SpecieEnum.COCODRILE, "Its a Crocodile perfect for"
+        Map<String, String> stringDescriptionMap = Map.of(
+                "AXOLOT", "A shimmering aquatic guardian that heals and purifies with its presence.",
+                "COCODRILE", "An emerald guardian that controls currents and weather with its roar.",
+                "WOLF", "A noble creature with silver fur whose howl summons the moon."
+
         );
 
-        Arrays.stream(specieNames).forEach((specieName) -> {
+        Map<String, String> stringSpriteMap = Map.of(
+                "AXOLOT", "../../../assets/taskies/Ajolote bb.png",
+                "COCODRILE", "../../../assets/taskies/Croco bb.png",
+                "WOLF", "../../../assets/taskies/Lobo bb.png"
+        );
+
+        Map<String, String> stringEvolutionMap = Map.of(
+                "AXOLOT", "../../../assets/taskies/evolution/Axolt.png",
+                "COCODRILE", "../../../assets/taskies/evolution/Croco.png",
+                "WOLF", "../../../assets/taskies/evolution/Lobo.png"
+        );
+
+        Arrays.stream(specieNames).forEach(specieName -> {
             Optional<Specie> optionalSpecie = specieRepository.findByName(specieName);
 
-            optionalSpecie.ifPresentOrElse(System.out::println, () -> {
+            if (optionalSpecie.isEmpty()) {
                 Specie specieToCreate = new Specie();
-
                 specieToCreate.setName(specieName);
                 specieToCreate.setDescription(stringDescriptionMap.get(specieName));
+                specieToCreate.setEvolution(stringEvolutionMap.get(specieName));
+                specieToCreate.setSprite(stringSpriteMap.get(specieName));
 
                 specieRepository.save(specieToCreate);
-            });
+            }
         });
     }
 }

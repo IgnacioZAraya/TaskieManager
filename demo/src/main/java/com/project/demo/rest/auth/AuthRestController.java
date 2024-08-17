@@ -69,9 +69,14 @@ public class AuthRestController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         user.setExperience(10L);
+        user.setFoodUser(10L);
+        user.setCleanerUser(10L);
+        user.setKid(false);
+        user.setPrivateCode(null);
+        user.setVisible(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.BASE);
 
+        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.BASE);
         if (optionalRole.isEmpty()) {
             return null;
         }

@@ -9,7 +9,6 @@ import jakarta.persistence.*;
 public class TaskieLevel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
     private Long id;
 
 
@@ -17,7 +16,7 @@ public class TaskieLevel {
     @JoinColumn(name = "cosmetic_id", referencedColumnName = "id")
     private Cosmetic cosmetic;
 
-
+    private Long value;
     private boolean hasEvolution;
 
     private Long value;
@@ -45,6 +44,13 @@ public class TaskieLevel {
     }
 
 
+    public Long getValue() {
+        return value;
+    }
+
+    public void setValue(Long value) {
+        this.value = value;
+    }
 
     public Cosmetic getCosmetic() {
         return cosmetic;

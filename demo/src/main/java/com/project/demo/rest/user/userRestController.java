@@ -61,12 +61,12 @@ public class userRestController {
     @PostMapping
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> addUser(@RequestBody User user) {
-
         user.setExperience(10L);
         user.setFoodUser(10L);
         user.setCleanerUser(10L);
         user.setKid(false);
         user.setPrivateCode(null);
+        user.setVisible(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Optional<Role> optionalRole = RoleRepository.findByName(RoleEnum.BASE);
         Optional<User> optionalUser = UserRepository.findByEmail(user.getEmail());
@@ -132,6 +132,7 @@ public class userRestController {
                     existingUser.setEmail(user.getEmail());
                     existingUser.setFoodUser(user.getFoodUser());
                     existingUser.setCleanerUser(user.getCleanerUser());
+                    existingUser.setVisible(true);
                     return UserRepository.save(existingUser);
                 })
                 .orElseGet(() -> {
@@ -225,8 +226,17 @@ public class userRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        UserRepository.deleteById(id);
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        Optional<User> optionalUser = UserRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setVisible(false);
+            UserRepository.save(user);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/me")

@@ -5,7 +5,6 @@ import com.project.demo.logic.entity.cosmetic.CosmeticRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,6 +24,7 @@ public class TaskieLevelSeeder implements ApplicationListener<ContextRefreshedEv
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) { this.loadLevels();
 
     }
+
 
     private void loadLevels(){
         int count = 1;
@@ -95,6 +95,5 @@ public class TaskieLevelSeeder implements ApplicationListener<ContextRefreshedEv
 
             count++;
         }
-
     }
 }

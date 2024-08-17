@@ -1,13 +1,10 @@
 package com.project.demo.logic.entity.taskie;
 
-
 import com.project.demo.logic.entity.LevelTaskie.TaskieLevel;
 import com.project.demo.logic.entity.specie.Specie;
 import com.project.demo.logic.entity.status.Status;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Table(name = "taskie")
 @Entity
@@ -16,7 +13,7 @@ public class Taskie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specie_id", referencedColumnName = "id", nullable = false)
     private Specie specie;
 
@@ -24,17 +21,15 @@ public class Taskie {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
-    private Status alive;
+    private Status status;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     private boolean visible;
 
     private Long experience;
-
-    private String sprite;
 
     private Integer life;
 
@@ -44,31 +39,11 @@ public class Taskie {
 
     private Integer energy;
 
-    @ManyToMany
+    @ManyToOne
     @JoinTable(name = "taskie_level", joinColumns = @JoinColumn(name = "taskie_id"), inverseJoinColumns = @JoinColumn(name = "level_id"))
-    private List<TaskieLevel> lvlTaskie;
-
-
-
-
+    private TaskieLevel lvlTaskie;
 
     public Taskie() {
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Long getId() {
@@ -95,12 +70,36 @@ public class Taskie {
         this.name = name;
     }
 
-    public Status getAlive() {
-        return alive;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setAlive(Status alive) {
-        this.alive = alive;
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public Long getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Long experience) {
+        this.experience = experience;
     }
 
     public Integer getLife() {
@@ -135,22 +134,13 @@ public class Taskie {
         this.energy = energy;
     }
 
-    public Long getExperience() {
-        return experience;
+    public TaskieLevel getLvlTaskie() {
+        return lvlTaskie;
     }
 
-    public void setExperience(Long experience) {
-        this.experience = experience;
+    public void setLvlTaskie(TaskieLevel lvlTaskie) {
+        this.lvlTaskie = lvlTaskie;
     }
-
-    public String getSprite() {
-        return sprite;
-    }
-
-    public void setSprite(String sprite) {
-        this.sprite = sprite;
-    }
-
 
 
 }
