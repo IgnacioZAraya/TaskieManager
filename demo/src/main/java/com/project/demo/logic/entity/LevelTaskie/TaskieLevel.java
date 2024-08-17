@@ -10,7 +10,7 @@ public class TaskieLevel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Integer id;
+    private Long id;
 
 
     @OneToOne
@@ -19,6 +19,8 @@ public class TaskieLevel {
 
 
     private boolean hasEvolution;
+
+    private Long value;
 
     @Column(unique = true, nullable = false)
     private String name;
@@ -34,11 +36,11 @@ public class TaskieLevel {
         this.name = name;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -58,5 +60,13 @@ public class TaskieLevel {
 
     public void setHasEvolution(boolean hasEvolution) {
         this.hasEvolution = hasEvolution;
+    }
+
+    public Long getValue() {
+        return value;
+    }
+
+    public void setValue(Long value) {
+        this.value = value;
     }
 }

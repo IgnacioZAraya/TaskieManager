@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 public class Cosmetic {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
     private Long id;
 
     @Column(unique = true, nullable = false)

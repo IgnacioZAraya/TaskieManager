@@ -57,7 +57,7 @@ public class taskieRestController {
     }
 
     @PutMapping("/{id}/apply-cosmetic")
-    public ResponseEntity<Taskie> applyCosmetic(@PathVariable Long id, @RequestBody Map<String, Long> request) {
+    public ResponseEntity<Taskie> applyIntractable(@PathVariable Long id, @RequestBody Map<String, Long> request) {
         Long cosmeticId = request.get("cosmeticId");
         Taskie taskie = taskieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Taskie not found"));

@@ -88,6 +88,7 @@ public class TaskieLevelSeeder implements ApplicationListener<ContextRefreshedEv
                 }
 
                 taskieLevelToCreate.setHasEvolution(Objects.equals(taskieLevelToCreate.getName(), "Level 15"));
+                taskieLevelToCreate.setValue(1000L*finalCount);
 
                 levelTaskieRepository.save(taskieLevelToCreate);
             });
