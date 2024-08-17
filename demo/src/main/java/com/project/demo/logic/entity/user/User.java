@@ -37,6 +37,12 @@ public class User implements UserDetails {
 
     private Long foodUser;
 
+    private Long cleanerUser;
+
+    private boolean isKid;
+
+    private Integer privateCode;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "taskie_id", referencedColumnName = "id")
     private Taskie taskie;
@@ -186,6 +192,30 @@ public class User implements UserDetails {
 
     public void setFoodUser(Long foodUser) {
         this.foodUser = foodUser;
+    }
+
+    public Long getCleanerUser() {
+        return cleanerUser;
+    }
+
+    public void setCleanerUser(Long cleanerUser) {
+        this.cleanerUser = cleanerUser;
+    }
+
+    public boolean isKid() {
+        return isKid;
+    }
+
+    public void setKid(boolean kid) {
+        isKid = kid;
+    }
+
+    public Integer getPrivateCode() {
+        return privateCode;
+    }
+
+    public void setPrivateCode(Integer privateCode) {
+        this.privateCode = privateCode;
     }
 
     public Taskie getTaskie() {

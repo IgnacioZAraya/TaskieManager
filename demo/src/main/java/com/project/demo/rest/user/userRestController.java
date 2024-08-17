@@ -167,6 +167,32 @@ public class userRestController {
                 });
     }
 
+    @PutMapping("/kid/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ASSOCIATE', 'BASE')")
+    public User updateKidStatus(@PathVariable Long id, @RequestBody User user) {
+        user.setId(id);
+        User authenticatedUserProfile = authenticationService.authenticateId(user);
+
+        return UserRepository.findById(id)
+                .map(existingUser -> {
+
+                    if (authenticatedUserProfile == null){
+                        existingUser.setId(id);
+                        return UserRepository.save(existingUser);
+                    }
+
+                    existingUser.setKid(!existingUser.isKid());
+
+
+                    return UserRepository.save(existingUser);
+
+                })
+                .orElseGet(() -> {
+                    user.setId(id);
+                    return UserRepository.save(user);
+                });
+    }
+
     @PutMapping("/associate/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ASSOCIATE', 'BASE')")
     public User updateAssociateUser(@PathVariable Long id, @RequestBody User user) {

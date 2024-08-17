@@ -1,16 +1,14 @@
 package com.project.demo.logic.entity.LevelTaskie;
 
 import com.project.demo.logic.entity.cosmetic.Cosmetic;
-import com.project.demo.logic.entity.cosmetic.CosmeticEnum;
 import com.project.demo.logic.entity.cosmetic.CosmeticRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+
 @Component
 public class TaskieLevelSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -27,34 +25,75 @@ public class TaskieLevelSeeder implements ApplicationListener<ContextRefreshedEv
 
     }
 
-    private void loadLevels() {
-        Map<LevelEnum, CosmeticEnum> levelCosmeticMap = Map.of(
-                LevelEnum.Nivel_5, CosmeticEnum.FOOD,
-                LevelEnum.Nivel_10, CosmeticEnum.FOOTBALL,
-                LevelEnum.Nivel_15, CosmeticEnum.SHAMPOO
-        );
 
-        EnumMap<LevelEnum, Long> levelExperienceMap = new EnumMap<>(LevelEnum.class);
-        for (int i = 0; i < LevelEnum.values().length; i++) {
-            levelExperienceMap.put(LevelEnum.values()[i], (i + 1) * 25L);
-        }
+    private void loadLevels(){
+        int count = 1;
 
-        Arrays.stream(LevelEnum.values()).forEach(levelEnum -> {
-            Optional<TaskieLevel> optionalTaskieLevel = levelTaskieRepository.findByName(levelEnum);
-            Optional<Cosmetic> optionalCosmetic = Optional.ofNullable(levelCosmeticMap.get(levelEnum))
-                    .flatMap(cosmeticRepository::findByName);
+        while (count <= 20){
+            Optional<TaskieLevel> optionalTaskieLevel = levelTaskieRepository.findByName("Level "+count);
+            AtomicReference<Optional<Cosmetic>> optionalCosmetic = new AtomicReference<>(Optional.empty());
 
-            optionalTaskieLevel.ifPresentOrElse(
-                    System.out::println,
-                    () -> {
-                        TaskieLevel taskieLevelToCreate = new TaskieLevel();
-                        taskieLevelToCreate.setName(levelEnum);
-                        taskieLevelToCreate.setValue(levelExperienceMap.get(levelEnum));
-                        taskieLevelToCreate.setCosmetic(optionalCosmetic.orElse(null));
-                        taskieLevelToCreate.setHasEvolution(levelEnum == LevelEnum.Nivel_15);
-                        levelTaskieRepository.save(taskieLevelToCreate);
+            int finalCount = count;
+            optionalTaskieLevel.ifPresentOrElse(System.out::println, () ->{
+                TaskieLevel taskieLevelToCreate = new TaskieLevel();
+
+                taskieLevelToCreate.setName("Level "+ finalCount);
+
+                switch (taskieLevelToCreate.getName()){
+                    case "Level 5": {
+                        optionalCosmetic.set(cosmeticRepository.findByName("3D_GLASSES"));
+
+                        if (optionalCosmetic.get().isEmpty()){
+                            return;
+                        }
+
+                        taskieLevelToCreate.setCosmetic(optionalCosmetic.get().get());
+                        break;
                     }
-            );
-        });
+                    case "Level 10": {
+                        optionalCosmetic.set(cosmeticRepository.findByName("CLASSY_OUTFIT"));
+
+                        if (optionalCosmetic.get().isEmpty()){
+                            return;
+                        }
+
+                        taskieLevelToCreate.setCosmetic(optionalCosmetic.get().get());
+                        break;
+                    }
+                    case "Level 15": {
+                        optionalCosmetic.set(cosmeticRepository.findByName("BEACH_OUTFIT"));
+
+                        if (optionalCosmetic.get().isEmpty()){
+                            return;
+                        }
+
+                        taskieLevelToCreate.setCosmetic(optionalCosmetic.get().get());
+                        break;
+                    }
+                    case "Level 20": {
+                        optionalCosmetic.set(cosmeticRepository.findByName("ROYAL_OUTFIT"));
+
+                        if (optionalCosmetic.get().isEmpty()){
+                            return;
+                        }
+
+                        taskieLevelToCreate.setCosmetic(optionalCosmetic.get().get());
+                        break;
+                    }
+                    default: {
+                        taskieLevelToCreate.setCosmetic(null);
+                        taskieLevelToCreate.setHasEvolution(false);
+                        break;
+                    }
+                }
+
+                taskieLevelToCreate.setHasEvolution(Objects.equals(taskieLevelToCreate.getName(), "Level 15"));
+                taskieLevelToCreate.setValue(1000L*finalCount);
+
+                levelTaskieRepository.save(taskieLevelToCreate);
+            });
+
+            count++;
+        }
     }
 }

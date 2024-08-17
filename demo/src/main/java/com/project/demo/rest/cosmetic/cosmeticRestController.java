@@ -2,7 +2,9 @@ package com.project.demo.rest.cosmetic;
 
 import com.project.demo.logic.entity.cosmetic.Cosmetic;
 import com.project.demo.logic.entity.cosmetic.CosmeticRepository;
+import com.project.demo.logic.entity.interactable.Interactable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,42 +14,46 @@ import java.util.List;
 @RequestMapping("/cosmetic")
 public class cosmeticRestController {
     @Autowired
-    private CosmeticRepository CosmeticRepository;
+    private CosmeticRepository cosmeticRepository;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public List<Cosmetic> getAllCosmetic() {
-        return CosmeticRepository.findAll();
+        return cosmeticRepository.findAll();
     }
 
     @PostMapping
-    public Cosmetic addCosmetic(@RequestBody Cosmetic cosmetic) {
-
-        return CosmeticRepository.save(cosmetic);
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> addCosmetic(@RequestBody Cosmetic cosmetic) {
+       Cosmetic savedCosmetic =  cosmeticRepository.save(cosmetic);
+        return ResponseEntity.ok(savedCosmetic);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public Cosmetic getCosmeticById(@PathVariable Long id) {
-        return CosmeticRepository.findById(id).orElseThrow(RuntimeException::new);
+        return cosmeticRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public Cosmetic updateCosmetic(@PathVariable Long id, @RequestBody Cosmetic cosmetic) {
-        return CosmeticRepository.findById(id)
+        return cosmeticRepository.findById(id)
                 .map(existingCosmetic -> {
                     existingCosmetic.setSprite(cosmetic.getSprite());
-                    return CosmeticRepository.save(existingCosmetic);
+                    return cosmeticRepository.save(existingCosmetic);
                 })
                 .orElseGet(() -> {
                     cosmetic.setId(id);
-                    return CosmeticRepository.save(cosmetic);
+                    return cosmeticRepository.save(cosmetic);
                 });
     }
 
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public void deleteCosmetic(@PathVariable Long id) {
-        CosmeticRepository.deleteById(id);
+        cosmeticRepository.deleteById(id);
     }
 
 

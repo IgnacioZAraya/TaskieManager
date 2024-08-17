@@ -1,6 +1,7 @@
 package com.project.demo.logic.entity.LevelTaskie;
 
 import com.project.demo.logic.entity.cosmetic.Cosmetic;
+import com.project.demo.logic.entity.interactable.Interactable;
 import jakarta.persistence.*;
 
 @Table(name = "taskieLvl")
@@ -18,17 +19,19 @@ public class TaskieLevel {
     private Long value;
     private boolean hasEvolution;
 
+    private Long value;
+
     @Column(unique = true, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private LevelEnum name;
+    private String name;
+
     public TaskieLevel() {
     }
 
-    public LevelEnum getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(LevelEnum name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -63,5 +66,13 @@ public class TaskieLevel {
 
     public void setHasEvolution(boolean hasEvolution) {
         this.hasEvolution = hasEvolution;
+    }
+
+    public Long getValue() {
+        return value;
+    }
+
+    public void setValue(Long value) {
+        this.value = value;
     }
 }

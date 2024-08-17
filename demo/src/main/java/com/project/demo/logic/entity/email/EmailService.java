@@ -21,7 +21,7 @@ public class EmailService {
         Content content = new Content("text/plain", "Here's the code for changing you account role: " + code);
         Mail mail = new Mail(from, subject, to, content);
 
-        SendGrid sg = new SendGrid("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");
+        /*SendGrid sg = new SendGrid("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");
         Request request = new Request();
         try {
             request.setMethod(Method.POST);
@@ -32,6 +32,8 @@ public class EmailService {
             return response.getBody();
         } catch (IOException ex) {
             throw ex;
-        }
+        }*/
+
+        return "";
     }
 }
