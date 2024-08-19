@@ -19,7 +19,7 @@ public class TaskieLevel {
     private Long value;
     private boolean hasEvolution;
 
-    private Long value;
+
 
     @Column(unique = true, nullable = false)
     private String name;
@@ -68,11 +68,5 @@ public class TaskieLevel {
         this.hasEvolution = hasEvolution;
     }
 
-    public Long getValue() {
-        return value;
-    }
 
-    public void setValue(Long value) {
-        this.value = value;
-    }
 }

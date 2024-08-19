@@ -25,13 +25,13 @@ public class specieRestController {
     private SpecieRepository specieRepository;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public List<Specie> getAllSpecie() {
         return (List<Specie>) specieRepository.findAll();
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public Specie addSpecie(@RequestBody Specie specie) {
         return specieRepository.save(specie);
     }

@@ -16,7 +16,7 @@ public class levelRestController {
 
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public List<Level> getAllLevel() {
         return LevelRepository.findAll();
     }

@@ -39,7 +39,7 @@ public class taskieRestController {
     private InteractableRepository interactableRepository;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public List<Taskie> getAllTaskie() {
         return taskieRepository.findAll();
     }
