@@ -9,6 +9,7 @@ import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.user.User;
+import com.project.demo.logic.entity.user.UserDTO;
 import com.project.demo.logic.entity.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
+
 
 @RestController
 @RequestMapping("/users")
@@ -95,7 +97,7 @@ public class userRestController {
         int privateCode = random.nextInt(max - min + 1) + min;
 
 
-         UserRepository.findById(id)
+        UserRepository.findById(id)
                 .map(existingUser -> {
 
                     existingUser.setPrivateCode(privateCode);
@@ -123,20 +125,27 @@ public class userRestController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ASSOCIATE', 'BASE')")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userSpec) {
+
         return UserRepository.findById(id)
                 .map(existingUser -> {
-                    existingUser.setName(user.getName());
-                    existingUser.setLastname(user.getLastname());
-                    existingUser.setEmail(user.getEmail());
-                    existingUser.setFoodUser(user.getFoodUser());
-                    existingUser.setCleanerUser(user.getCleanerUser());
-                    existingUser.setVisible(true);
-                    return UserRepository.save(existingUser);
+                    existingUser.setName(userSpec.getName());
+                    if (userSpec.getFoodUser() != null) {
+                        existingUser.setFoodUser(userSpec.getFoodUser());
+                    }
+                    if (userSpec.getCleanerUser() != null) {
+                        existingUser.setCleanerUser(userSpec.getCleanerUser());
+                    }
+                    User updatedUser = UserRepository.save(existingUser);
+                    UserDTO updatedUserSpec = new UserDTO();
+                    updatedUserSpec.setId(updatedUser.getId());
+                    updatedUserSpec.setName(updatedUser.getName());
+                    updatedUserSpec.setFoodUser(updatedUser.getFoodUser());
+                    updatedUserSpec.setCleanerUser(updatedUser.getCleanerUser());
+                    return ResponseEntity.ok(updatedUserSpec);
                 })
                 .orElseGet(() -> {
-                    user.setId(id);
-                    return UserRepository.save(user);
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
                 });
     }
 
@@ -148,17 +157,22 @@ public class userRestController {
 
         return UserRepository.findById(id)
                 .map(existingUser -> {
-                    if (authenticatedUserProfile == null){
+                    if (authenticatedUserProfile == null) {
                         existingUser.setId(id);
                         return UserRepository.save(existingUser);
                     }
                     existingUser.setName(user.getName());
                     existingUser.setLastname(user.getLastname());
                     existingUser.setEmail(user.getEmail());
-                    existingUser.setFoodUser(user.getFoodUser());
-                    existingUser.setCleanerUser(user.getCleanerUser());
-                    return UserRepository.save(existingUser);
 
+                    if (user.getFoodUser() != null) {
+                        existingUser.setFoodUser(user.getFoodUser());
+                    }
+                    if (user.getCleanerUser() != null) {
+                        existingUser.setCleanerUser(user.getCleanerUser());
+                    }
+
+                    return UserRepository.save(existingUser);
                 })
                 .orElseGet(() -> {
                     user.setId(id);
@@ -214,7 +228,7 @@ public class userRestController {
                     }
 
                     existingUser.setRole(optionalRole.get());
-                    
+
                     return UserRepository.save(existingUser);
 
                 })
