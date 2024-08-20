@@ -16,7 +16,7 @@ public class taskieLevelRestController {
 
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public List<TaskieLevel> getAllLevel() {
         return levelTaskieRepository.findAll();
     }

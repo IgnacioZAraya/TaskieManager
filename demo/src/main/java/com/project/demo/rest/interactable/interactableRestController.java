@@ -15,7 +15,7 @@ public class interactableRestController {
     private InteractableRepository InteractableRepository;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('BASE', 'SUPER_ADMIN', 'ASSOCIATE')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public List<Interactable> getAllCosmetic() {
         return InteractableRepository.findAll();
     }

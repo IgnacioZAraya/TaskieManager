@@ -16,7 +16,7 @@ public class statusRestController {
 
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public List<Status> getAllStatus() {
         return StatusRepository.findAll();
     }

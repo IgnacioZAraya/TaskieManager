@@ -16,7 +16,7 @@ public class experienceRestController {
 
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public List<Experience> getAllExperience() {
         return ExperienceRepository.findAll();
     }

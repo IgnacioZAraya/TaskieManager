@@ -1,4 +1,5 @@
 package com.project.demo.logic.entity.user;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.demo.logic.entity.level.Level;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.specie.Specie;
@@ -55,6 +56,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     private Task task;
 
+
     private Boolean visible;
 
     //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -69,6 +71,7 @@ public class User implements UserDetails {
     private Date updatedAt;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.getName().toString());
         return List.of(authority);
@@ -187,6 +190,7 @@ public class User implements UserDetails {
     public void setFoodUser(Long foodUser) {
         this.foodUser = foodUser;
     }
+
 
 
     public boolean isKid() {

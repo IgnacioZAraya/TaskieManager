@@ -1,6 +1,7 @@
-package com.project.demo.logic.entity.levelTaskie;
+package com.project.demo.logic.entity.LevelTaskie;
 
 import com.project.demo.logic.entity.cosmetic.Cosmetic;
+import com.project.demo.logic.entity.interactable.Interactable;
 import jakarta.persistence.*;
 
 @Table(name = "taskieLvl")
@@ -17,6 +18,8 @@ public class TaskieLevel {
 
     private Long value;
     private boolean hasEvolution;
+
+
 
     @Column(unique = true, nullable = false)
     private String name;
@@ -64,5 +67,6 @@ public class TaskieLevel {
     public void setHasEvolution(boolean hasEvolution) {
         this.hasEvolution = hasEvolution;
     }
+
 
 }
