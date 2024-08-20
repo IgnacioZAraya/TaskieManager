@@ -1,4 +1,4 @@
-package com.project.demo.logic.entity.LevelTaskie;
+package com.project.demo.logic.entity.levelTaskie;
 
 import com.project.demo.logic.entity.cosmetic.Cosmetic;
 import com.project.demo.logic.entity.interactable.Interactable;
