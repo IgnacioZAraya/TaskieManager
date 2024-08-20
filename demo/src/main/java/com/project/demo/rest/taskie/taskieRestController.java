@@ -39,7 +39,7 @@ public class taskieRestController {
     private InteractableRepository interactableRepository;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('BASE', 'SUPER_ADMIN', 'ASSOCIATE')")
     public List<Taskie> getAllTaskie() {
         return taskieRepository.findAll();
     }
@@ -63,6 +63,7 @@ public class taskieRestController {
         taskie.setExperience(0L);
         taskie.setVisible(true);
         taskie.setStatus(statusRepository.findById(1L).orElseThrow(() -> new RuntimeException("Status not found")));
+        taskie.setEvolved(false);
 
         Taskie savedTaskie = taskieRepository.save(taskie);
         return ResponseEntity.ok(savedTaskie);
@@ -87,8 +88,8 @@ public class taskieRestController {
     }
 
     @GetMapping("/userId/{userId}")
-    public ResponseEntity<List<TaskieDTO>> getTaskieByUser(@PathVariable Long userId) {
-        List<TaskieDTO> taskies = taskieRepository.findByUser(userId);
+    public ResponseEntity<List<Taskie>> getTaskieByUser(@PathVariable Long userId) {
+        List<Taskie> taskies = taskieRepository.findByUser(userId);
         return ResponseEntity.ok(taskies);
     }
 

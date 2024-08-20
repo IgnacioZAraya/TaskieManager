@@ -55,12 +55,6 @@ public class User implements UserDetails {
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     private Task task;
 
-    private Integer privateCode;
-
-    private Long cleanerUser;
-
-    private Boolean isKid;
-
     private Boolean visible;
 
     //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -194,13 +188,6 @@ public class User implements UserDetails {
         this.foodUser = foodUser;
     }
 
-    public Long getCleanerUser() {
-        return cleanerUser;
-    }
-
-    public void setCleanerUser(Long cleanerUser) {
-        this.cleanerUser = cleanerUser;
-    }
 
     public boolean isKid() {
         return isKid;
@@ -210,13 +197,7 @@ public class User implements UserDetails {
         isKid = kid;
     }
 
-    public Integer getPrivateCode() {
-        return privateCode;
-    }
 
-    public void setPrivateCode(Integer privateCode) {
-        this.privateCode = privateCode;
-    }
 
     public Taskie getTaskie() {
         return taskie;

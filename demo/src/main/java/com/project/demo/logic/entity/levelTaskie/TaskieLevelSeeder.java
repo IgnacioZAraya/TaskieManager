@@ -1,4 +1,4 @@
-package com.project.demo.logic.entity.LevelTaskie;
+package com.project.demo.logic.entity.levelTaskie;
 
 import com.project.demo.logic.entity.cosmetic.Cosmetic;
 import com.project.demo.logic.entity.cosmetic.CosmeticRepository;
@@ -39,51 +39,48 @@ public class TaskieLevelSeeder implements ApplicationListener<ContextRefreshedEv
 
                 taskieLevelToCreate.setName("Level "+ finalCount);
 
-                switch (taskieLevelToCreate.getName()){
-                    case "Level 5": {
+                switch (taskieLevelToCreate.getName()) {
+                    case "Level 5" -> {
                         optionalCosmetic.set(cosmeticRepository.findByName("3D_GLASSES"));
 
-                        if (optionalCosmetic.get().isEmpty()){
+                        if (optionalCosmetic.get().isEmpty()) {
                             return;
                         }
 
                         taskieLevelToCreate.setCosmetic(optionalCosmetic.get().get());
-                        break;
                     }
-                    case "Level 10": {
+                    case "Level 10" -> {
                         optionalCosmetic.set(cosmeticRepository.findByName("CLASSY_OUTFIT"));
 
-                        if (optionalCosmetic.get().isEmpty()){
+                        if (optionalCosmetic.get().isEmpty()) {
                             return;
                         }
 
                         taskieLevelToCreate.setCosmetic(optionalCosmetic.get().get());
-                        break;
                     }
-                    case "Level 15": {
+                    case "Level 15" -> {
                         optionalCosmetic.set(cosmeticRepository.findByName("BEACH_OUTFIT"));
 
-                        if (optionalCosmetic.get().isEmpty()){
+                        if (optionalCosmetic.get().isEmpty()) {
                             return;
                         }
 
                         taskieLevelToCreate.setCosmetic(optionalCosmetic.get().get());
-                        break;
+
                     }
-                    case "Level 20": {
+                    case "Level 20" -> {
                         optionalCosmetic.set(cosmeticRepository.findByName("ROYAL_OUTFIT"));
 
-                        if (optionalCosmetic.get().isEmpty()){
+                        if (optionalCosmetic.get().isEmpty()) {
                             return;
                         }
 
                         taskieLevelToCreate.setCosmetic(optionalCosmetic.get().get());
-                        break;
+
                     }
-                    default: {
+                    default -> {
                         taskieLevelToCreate.setCosmetic(null);
                         taskieLevelToCreate.setHasEvolution(false);
-                        break;
                     }
                 }
 
