@@ -3,6 +3,8 @@ package com.project.demo.rest.taskie;
 
 import com.project.demo.logic.entity.interactable.Interactable;
 import com.project.demo.logic.entity.interactable.InteractableRepository;
+import com.project.demo.logic.entity.levelTaskie.LevelTaskieRepository;
+import com.project.demo.logic.entity.levelTaskie.TaskieLevel;
 import com.project.demo.logic.entity.specie.Specie;
 
 import com.project.demo.logic.entity.specie.SpecieRepository;
@@ -37,6 +39,10 @@ public class taskieRestController {
 
     @Autowired
     private InteractableRepository interactableRepository;
+
+    @Autowired
+    private LevelTaskieRepository levelTaskieRepository;
+
 
     @GetMapping
     @PreAuthorize("hasAnyRole('BASE', 'SUPER_ADMIN', 'ASSOCIATE')")
@@ -73,18 +79,59 @@ public class taskieRestController {
     @PutMapping("/{id}/apply-cosmetic")
     public ResponseEntity<Taskie> applyIntractable(@PathVariable Long id, @RequestBody Map<String, Long> request) {
         Long cosmeticId = request.get("cosmeticId");
+
         Taskie taskie = taskieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Taskie not found"));
 
         Interactable interactable = interactableRepository.findById(cosmeticId)
                 .orElseThrow(() -> new RuntimeException("Cosmetic not found"));
 
-        taskie.setCleanse(Math.min(taskie.getCleanse() + interactable.getDirtynessEffect(), 100));
-        taskie.setHunger(Math.min(taskie.getHunger() + interactable.getHungerEffect(), 100));
-        taskie.setEnergy(Math.min(taskie.getEnergy() + interactable.getEnergyEffect(), 100));
+        if (interactable.getDirtynessEffect() != 0) {
+            taskie.setCleanse(Math.min(taskie.getCleanse() + interactable.getDirtynessEffect(), 100));
+            increaseTaskieExperience(taskie, 15L);
+        }
 
-        Taskie updatedTaskie = taskieRepository.save(taskie);
-        return ResponseEntity.ok(updatedTaskie);
+        if (interactable.getHungerEffect() != 0) {
+            taskie.setHunger(Math.min(taskie.getHunger() + interactable.getHungerEffect(), 100));
+            increaseTaskieExperience(taskie, 20L);
+        }
+
+        if (interactable.getEnergyEffect() != 0) {
+            taskie.setEnergy(Math.min(taskie.getEnergy() + interactable.getEnergyEffect(), 100));
+            increaseTaskieExperience(taskie, 10L);
+        }
+
+        return ResponseEntity.ok(taskie);
+    }
+    private void increaseTaskieExperience(Taskie taskie, Long experienceToAdd) {
+        taskie.setExperience(taskie.getExperience() + experienceToAdd);
+        updateTaskieExperienceAndLevel(taskie);
+    }
+
+    private void updateTaskieExperienceAndLevel(Taskie taskie) {
+        TaskieLevel currentLevel = taskie.getLvlTaskie();
+        Long experienceToAdd = taskie.getExperience();
+
+        while (experienceToAdd >= currentLevel.getValue()) {
+            experienceToAdd -= currentLevel.getValue();
+
+            TaskieLevel nextLevel = levelTaskieRepository.findById(currentLevel.getId() + 1)
+                    .orElseThrow(() -> new RuntimeException("Next level not found"));
+
+            if (nextLevel.isHasEvolution()) {
+                taskie.setEvolved(true);
+            }
+
+            if(nextLevel.getCosmetic() != null){
+                taskie.getTaskieCosmetics().add(nextLevel.getCosmetic());
+            }
+
+            taskie.setLvlTaskie(nextLevel);
+            currentLevel = nextLevel;
+        }
+
+        taskie.setExperience(experienceToAdd);
+        taskieRepository.save(taskie);
     }
 
     @GetMapping("/userId/{userId}")
