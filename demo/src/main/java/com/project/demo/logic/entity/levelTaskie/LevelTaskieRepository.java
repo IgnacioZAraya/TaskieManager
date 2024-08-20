@@ -1,4 +1,4 @@
-package com.project.demo.logic.entity.LevelTaskie;
+package com.project.demo.logic.entity.levelTaskie;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

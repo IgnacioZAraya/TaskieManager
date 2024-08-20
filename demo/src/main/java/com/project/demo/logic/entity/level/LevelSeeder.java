@@ -1,20 +1,23 @@
 package com.project.demo.logic.entity.level;
 
-import com.project.demo.logic.entity.rol.RoleEnum;
+import com.project.demo.logic.entity.prize.Prize;
+import com.project.demo.logic.entity.prize.PrizeEnum;
+import com.project.demo.logic.entity.prize.PrizeRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Component
 public class LevelSeeder implements ApplicationListener<ContextRefreshedEvent> {
     private final LevelRepository levelRepository;
-    public LevelSeeder(LevelRepository levelRepository){
+    private final PrizeRepository prizeRepository;
+
+    public LevelSeeder(LevelRepository levelRepository, PrizeRepository prizeRepository){
         this.levelRepository = levelRepository;
+        this.prizeRepository = prizeRepository;
     }
 
     @Override
@@ -23,29 +26,49 @@ public class LevelSeeder implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     private void loadLevel(){
-        LevelUserEnum[] levelNames = new LevelUserEnum[] { LevelUserEnum.Level_1, LevelUserEnum.Level_2, LevelUserEnum.Level_3, LevelUserEnum.Level_4, LevelUserEnum.Level_5, LevelUserEnum.Level_6, LevelUserEnum.Level_7, LevelUserEnum.Level_8, LevelUserEnum.Level_9, LevelUserEnum.Level_10};
-        Map<LevelUserEnum, Long> levelValueMap = Map.of(
-                LevelUserEnum.Level_1, 100L,
-                LevelUserEnum.Level_2, 200L,
-                LevelUserEnum.Level_3, 300L,
-                LevelUserEnum.Level_4, 400L,
-                LevelUserEnum.Level_5, 500L,
-                LevelUserEnum.Level_6, 600L,
-                LevelUserEnum.Level_7, 700L,
-                LevelUserEnum.Level_8, 800L,
-                LevelUserEnum.Level_9, 900L,
-                LevelUserEnum.Level_10, 1000L
-        );
+        int count = 1;
 
-        Arrays.stream(levelNames).forEach(levelName -> {
-            Optional<Level> optionalLevel = levelRepository.findByName(levelName);
+        while (count <= 10){
+            Optional<Level> optionalLevel = levelRepository.findByName("Level "+count);
+            AtomicReference<Optional<Prize>> optionalPrize = new AtomicReference<>(Optional.empty());
 
-            optionalLevel.ifPresentOrElse(System.out::println, () -> {
+            int finalCount = count;
+            optionalLevel.ifPresentOrElse(System.out::println, () ->{
                 Level levelToCreate = new Level();
-                levelToCreate.setName(levelName);
-                levelToCreate.setValue(levelValueMap.get(levelName));
+
+                levelToCreate.setName("Level "+ finalCount);
+                levelToCreate.setValue(1500L*finalCount);
+
+                if (finalCount < 4){
+                    optionalPrize.set(prizeRepository.findByPriority(PrizeEnum.LOW));
+
+                    if (optionalPrize.get().isEmpty()) {
+                        return;
+                    }
+
+                    levelToCreate.setPrize(optionalPrize.get().get());
+                } else if (finalCount > 6 ) {
+                    optionalPrize.set(prizeRepository.findByPriority(PrizeEnum.HIGH));
+
+                    if (optionalPrize.get().isEmpty()) {
+                        return;
+                    }
+
+                    levelToCreate.setPrize(optionalPrize.get().get());
+                }else {
+                    optionalPrize.set(prizeRepository.findByPriority(PrizeEnum.MEDIUM));
+
+                    if (optionalPrize.get().isEmpty()) {
+                        return;
+                    }
+
+                    levelToCreate.setPrize(optionalPrize.get().get());
+                }
+
                 levelRepository.save(levelToCreate);
             });
-        });
+
+            count++;
+        }
     }
 }

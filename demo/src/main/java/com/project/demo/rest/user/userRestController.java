@@ -5,7 +5,6 @@ import com.project.demo.logic.entity.email.EmailService;
 import com.project.demo.logic.entity.level.Level;
 
 import com.project.demo.logic.entity.level.LevelRepository;
-import com.project.demo.logic.entity.level.LevelUserEnum;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
@@ -74,7 +73,7 @@ public class userRestController {
         if (optionalRole.isEmpty() || optionalUser.isPresent()) {
             return null;
         }
-        Optional<Level> optionalLevel = levelRepository.findByName(LevelUserEnum.valueOf("Level_1"));
+        Optional<Level> optionalLevel = levelRepository.findByName("Level 1");
         if (optionalLevel.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Default level 'Level_1' not found");
         }
