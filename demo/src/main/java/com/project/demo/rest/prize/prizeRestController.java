@@ -16,7 +16,7 @@ public class prizeRestController {
 
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public List<Prize> getAllPrize() {
         return PrizeRepository.findAll();
     }

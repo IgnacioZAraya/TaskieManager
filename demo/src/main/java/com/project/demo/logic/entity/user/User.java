@@ -1,4 +1,5 @@
 package com.project.demo.logic.entity.user;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.demo.logic.entity.level.Level;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.specie.Specie;
@@ -55,11 +56,6 @@ public class User implements UserDetails {
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     private Task task;
 
-    private Integer privateCode;
-
-    private Long cleanerUser;
-
-    private Boolean isKid;
 
     private Boolean visible;
 
@@ -75,6 +71,7 @@ public class User implements UserDetails {
     private Date updatedAt;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.getName().toString());
         return List.of(authority);
@@ -194,13 +191,7 @@ public class User implements UserDetails {
         this.foodUser = foodUser;
     }
 
-    public Long getCleanerUser() {
-        return cleanerUser;
-    }
 
-    public void setCleanerUser(Long cleanerUser) {
-        this.cleanerUser = cleanerUser;
-    }
 
     public boolean isKid() {
         return isKid;
@@ -210,13 +201,7 @@ public class User implements UserDetails {
         isKid = kid;
     }
 
-    public Integer getPrivateCode() {
-        return privateCode;
-    }
 
-    public void setPrivateCode(Integer privateCode) {
-        this.privateCode = privateCode;
-    }
 
     public Taskie getTaskie() {
         return taskie;

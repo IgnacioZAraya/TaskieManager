@@ -16,7 +16,7 @@ public class unlockRestController {
 
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public List<Unlock> getAllUnlock() {
         return UnlockRepository.findAll();
     }
