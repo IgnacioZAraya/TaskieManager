@@ -46,7 +46,7 @@ public class Taskie {
     private boolean evolved;
 
     @ManyToOne
-    @JoinTable(name = "taskie_level", joinColumns = @JoinColumn(name = "taskie_id"), inverseJoinColumns = @JoinColumn(name = "level_id"))
+    @JoinColumn(name = "level_id", referencedColumnName = "id")
     private TaskieLevel lvlTaskie;
 
     @ManyToMany
