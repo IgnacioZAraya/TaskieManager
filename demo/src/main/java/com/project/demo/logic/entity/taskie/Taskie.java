@@ -1,10 +1,14 @@
 package com.project.demo.logic.entity.taskie;
 
-import com.project.demo.logic.entity.LevelTaskie.TaskieLevel;
+import com.project.demo.logic.entity.cosmetic.Cosmetic;
+import com.project.demo.logic.entity.levelTaskie.TaskieLevel;
 import com.project.demo.logic.entity.specie.Specie;
 import com.project.demo.logic.entity.status.Status;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "taskie")
 @Entity
@@ -39,9 +43,15 @@ public class Taskie {
 
     private Integer energy;
 
+    private boolean evolved;
+
     @ManyToOne
-    @JoinTable(name = "taskie_level", joinColumns = @JoinColumn(name = "taskie_id"), inverseJoinColumns = @JoinColumn(name = "level_id"))
+    @JoinColumn(name = "level_id", referencedColumnName = "id")
     private TaskieLevel lvlTaskie;
+
+    @ManyToMany
+    @JoinTable( name = "taskie_cosmetics", joinColumns = @JoinColumn(name = "taskie_id"), inverseJoinColumns = @JoinColumn(name = "cosmetic_id"))
+    private List<Cosmetic> taskieCosmetics = new ArrayList<>();
 
     public Taskie() {
     }
@@ -142,5 +152,19 @@ public class Taskie {
         this.lvlTaskie = lvlTaskie;
     }
 
+    public boolean isEvolved() {
+        return evolved;
+    }
 
+    public void setEvolved(boolean evolved) {
+        this.evolved = evolved;
+    }
+
+    public List<Cosmetic> getTaskieCosmetics() {
+        return taskieCosmetics;
+    }
+
+    public void setTaskieCosmetics(List<Cosmetic> taskieCosmetics) {
+        this.taskieCosmetics = taskieCosmetics;
+    }
 }

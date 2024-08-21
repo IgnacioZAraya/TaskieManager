@@ -2,7 +2,6 @@ package com.project.demo.logic.entity.rol;
 
 import com.project.demo.logic.entity.level.Level;
 import com.project.demo.logic.entity.level.LevelRepository;
-import com.project.demo.logic.entity.level.LevelUserEnum;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

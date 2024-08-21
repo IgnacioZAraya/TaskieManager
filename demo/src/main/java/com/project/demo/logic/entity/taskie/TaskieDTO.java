@@ -1,10 +1,12 @@
 package com.project.demo.logic.entity.taskie;
 
+import com.project.demo.logic.entity.cosmetic.Cosmetic;
 import com.project.demo.logic.entity.specie.Specie;
 import com.project.demo.logic.entity.status.Status;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,7 +37,9 @@ public class TaskieDTO {
 
     private Integer energy;
 
+    private boolean evolved;
 
+    private ArrayList<Cosmetic> cosmetics;
 
     public Integer getLife() {
         return life;
@@ -130,7 +134,23 @@ public class TaskieDTO {
         this.userId = userId;
     }
 
-    public TaskieDTO(Long id, Long specieId, String name, Long statusId, Long userId, Long experience, boolean visible, Integer life, Integer cleanse, Integer hunger, Integer energy) {
+    public boolean isEvolved() {
+        return evolved;
+    }
+
+    public void setEvolved(boolean evolved) {
+        this.evolved = evolved;
+    }
+
+    public ArrayList<Cosmetic> getCosmetics() {
+        return cosmetics;
+    }
+
+    public void setCosmetics(ArrayList<Cosmetic> cosmetics) {
+        this.cosmetics = cosmetics;
+    }
+
+    public TaskieDTO(Long id, Long specieId, String name, Long statusId, Long userId, Long experience, boolean visible, Integer life, Integer cleanse, Integer hunger, Integer energy, boolean evolved, ArrayList<Cosmetic> cosmetics) {
         this.id = id;
         this.specieId = specieId;
         this.name = name;
@@ -142,6 +162,8 @@ public class TaskieDTO {
         this.cleanse = cleanse;
         this.hunger = hunger;
         this.energy = energy;
+        this.evolved = evolved;
+        this.cosmetics = cosmetics;
     }
 }
 

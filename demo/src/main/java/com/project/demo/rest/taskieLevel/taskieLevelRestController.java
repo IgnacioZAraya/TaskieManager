@@ -1,8 +1,7 @@
 package com.project.demo.rest.taskieLevel;
 
-import com.project.demo.logic.entity.LevelTaskie.LevelTaskieRepository;
-import com.project.demo.logic.entity.LevelTaskie.TaskieLevel;
-import com.project.demo.logic.entity.level.Level;
+import com.project.demo.logic.entity.levelTaskie.LevelTaskieRepository;
+import com.project.demo.logic.entity.levelTaskie.TaskieLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
