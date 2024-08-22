@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface TaskieRepository extends JpaRepository<Taskie, Long> {
+    @Query("SELECT t FROM Taskie t " + "LEFT JOIN FETCH t.taskieCosmetics " + "WHERE t.visible = true")
+    List<Taskie> findByVisibility();
+
     @Query("SELECT t FROM Taskie t " + "LEFT JOIN FETCH t.taskieCosmetics " + "WHERE t.user.id = :userId AND t.visible = true")
     List<Taskie> findByUser(@Param("userId") Long userId);
 }

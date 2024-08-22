@@ -49,7 +49,7 @@ public class taskieRestController {
     @GetMapping
     @PreAuthorize("hasAnyRole('BASE', 'SUPER_ADMIN', 'ASSOCIATE')")
     public List<Taskie> getAllTaskie() {
-        return taskieRepository.findAll();
+        return taskieRepository.findByVisibility();
     }
 
     @PostMapping
