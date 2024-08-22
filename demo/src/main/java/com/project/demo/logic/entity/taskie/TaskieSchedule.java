@@ -13,7 +13,7 @@ public class TaskieSchedule {
     @Autowired
     private TaskieRepository taskieRepository;
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 500)
     @Transactional
     public void reduceTaskieStats() {
         List<Taskie> taskies = taskieRepository.findAll();
@@ -44,6 +44,10 @@ public class TaskieSchedule {
 
             if (taskie.getCleanse() > 50 && taskie.getHunger() > 50 && taskie.getEnergy() > 50 && taskie.getLife() < 100) {
                 taskie.setLife(Math.min(taskie.getLife() + 1, 100));
+            }
+
+            if (taskie.getLife() == 0){
+                taskie.setVisible(false);
             }
 
             taskieRepository.save(taskie);
