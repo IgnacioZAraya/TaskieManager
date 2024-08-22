@@ -1,7 +1,9 @@
 package com.project.demo.rest.taskie;
 
+import com.project.demo.logic.entity.cosmetic.Cosmetic;
 import com.project.demo.logic.entity.interactable.Interactable;
 import com.project.demo.logic.entity.interactable.InteractableRepository;
+
 import com.project.demo.logic.entity.levelTaskie.LevelTaskieRepository;
 import com.project.demo.logic.entity.levelTaskie.TaskieLevel;
 import com.project.demo.logic.entity.specie.Specie;
@@ -54,15 +56,13 @@ public class taskieRestController {
 
     @PostMapping
     public ResponseEntity<?> addTaskie(@RequestBody TaskieDTO taskieDTO) {
-        // Busca la especie del Taskie
+
         Specie specie = specieRepository.findById(taskieDTO.getSpecieId())
                 .orElseThrow(() -> new RuntimeException("Specie not found"));
 
-        // Busca el usuario que será dueño del Taskie
         User user = userRepository.findById(taskieDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Crea un nuevo Taskie
         Taskie taskie = new Taskie();
         taskie.setName(taskieDTO.getName());
         taskie.setSpecie(specie);
@@ -88,8 +88,13 @@ public class taskieRestController {
         return ResponseEntity.ok(savedTaskie);
     }
 
-
-    @PutMapping("/{id}/apply-cosmetic")
+    @GetMapping("/{id}/cosmetics")
+    public ResponseEntity<List<Cosmetic>> getCosmeticsForTaskie(@PathVariable Long id) {
+        Taskie taskie = taskieRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Taskie not found"));
+        return ResponseEntity.ok(taskie.getTaskieCosmetics());
+    }
+    @PutMapping("/{id}/apply-interactable")
     public ResponseEntity<Taskie> applyIntractable(@PathVariable Long id, @RequestBody Map<String, Long> request) {
         Long cosmeticId = request.get("cosmeticId");
 

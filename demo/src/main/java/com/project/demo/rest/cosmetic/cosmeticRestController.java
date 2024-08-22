@@ -17,7 +17,7 @@ public class cosmeticRestController {
     private CosmeticRepository cosmeticRepository;
 
     @GetMapping
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public List<Cosmetic> getAllCosmetic() {
         return cosmeticRepository.findAll();
     }
@@ -30,13 +30,13 @@ public class cosmeticRestController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public Cosmetic getCosmeticById(@PathVariable Long id) {
         return cosmeticRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public Cosmetic updateCosmetic(@PathVariable Long id, @RequestBody Cosmetic cosmetic) {
         return cosmeticRepository.findById(id)
                 .map(existingCosmetic -> {
