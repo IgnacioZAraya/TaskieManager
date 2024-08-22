@@ -78,7 +78,7 @@ public class specieRestController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole( 'SUPER_ADMIN')")
     public Specie updateSpecie(
             @PathVariable Long id,
             @RequestParam("name") String name,

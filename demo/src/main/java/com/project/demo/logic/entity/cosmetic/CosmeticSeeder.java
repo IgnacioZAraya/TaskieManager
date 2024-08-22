@@ -33,27 +33,32 @@ public class CosmeticSeeder implements ApplicationListener<ContextRefreshedEvent
                 switch (finalCount){
                     case 1 : {
                         cosmeticToCreate.setName("3D_GLASSES");
+                        cosmeticToCreate.setSprite("../../../assets/cosmeticsV1/Glasses.png");
                         break;
                     }
                     case 2 : {
                         cosmeticToCreate.setName("CLASSY_OUTFIT");
+                        cosmeticToCreate.setSprite("../../../assets/cosmeticsV1/Classy.png");
                         break;
                     }
                     case 3 : {
                         cosmeticToCreate.setName("BEACH_OUTFIT");
+                        cosmeticToCreate.setSprite("../../../assets/cosmeticsV1/Beach.png");
                         break;
                     }
                     case 4 : {
                         cosmeticToCreate.setName("ROYAL_OUTFIT");
+                        cosmeticToCreate.setSprite("../../../assets/cosmeticsV1/Royal.png");
                         break;
                     }
                     default: {
                         cosmeticToCreate.setName("");
+                        cosmeticToCreate.setSprite("");
                         break;
                     }
                 }
 
-                cosmeticToCreate.setSprite("");
+
                 cosmeticRepository.save(cosmeticToCreate);
             });
 
