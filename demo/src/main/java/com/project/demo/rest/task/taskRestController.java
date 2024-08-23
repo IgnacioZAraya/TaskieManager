@@ -165,12 +165,10 @@ public class taskRestController {
     }
 
     private void updateUserExperienceAndFood(Task task) {
-        // Obtener el ID del premio asociado a la tarea
         Long prizeId = task.getPrize().getId();
         Prize prize = PrizeRepository.findById(prizeId)
                 .orElseThrow(() -> new RuntimeException("Prize not found"));
 
-        // Obtener los IDs de la experiencia y la comida asociadas al premio
         Long experienceId = prize.getExperience().getId();
         Long foodId = prize.getFood().getId();
 
@@ -179,15 +177,14 @@ public class taskRestController {
         Food food = FoodRepository.findById(foodId)
                 .orElseThrow(() -> new RuntimeException("Food not found"));
 
-        // Obtener los valores de experiencia y comida
         Long experienceValue = experience.getValue();
         Long foodValue = food.getValue();
 
-        // Actualizar la experiencia y la comida del usuario
         User user = task.getUser();
         if (user != null) {
             user.setExperience(user.getExperience() + experienceValue);
             user.setFoodUser(user.getFoodUser() + foodValue);
+            user.setCleanerUser(user.getCleanerUser() + 15);
             updateUserExperienceAndLevel(user);
 
             UserRepository.save(user);

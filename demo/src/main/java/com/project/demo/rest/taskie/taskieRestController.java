@@ -123,6 +123,7 @@ public class taskieRestController {
     }
     private void increaseTaskieExperience(Taskie taskie, Long experienceToAdd) {
         taskie.setExperience(taskie.getExperience() + experienceToAdd);
+        taskie.setEnergy(taskie.getEnergy() + 20);
         updateTaskieExperienceAndLevel(taskie);
     }
 
