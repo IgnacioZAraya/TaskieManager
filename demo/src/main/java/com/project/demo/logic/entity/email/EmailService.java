@@ -21,7 +21,7 @@ public class EmailService {
         Content content = new Content("text/plain", "Here's the code for changing you account role: " + code);
         Mail mail = new Mail(from, subject, to, content);
 
-        /*SendGrid sg = new SendGrid("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");
+        /*SendGrid sg = new SendGrid("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");
         Request request = new Request();
         try {
             request.setMethod(Method.POST);
