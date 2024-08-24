@@ -16,7 +16,7 @@ public class foodRestController {
 
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ASSOCIATE', 'SUPER_ADMIN', 'BASE')")
     public List<Food> getAllFood() {
         return FoodRepository.findAll();
     }
@@ -37,7 +37,6 @@ public class foodRestController {
                 .map(existingFood -> {
                     existingFood.setName(existingFood.getName());
                     existingFood.setValue(existingFood.getValue());
-                    existingFood.setSpeciesFav(existingFood.getSpeciesFav());
                     return FoodRepository.save(existingFood);
                 })
                 .orElseGet(() -> {

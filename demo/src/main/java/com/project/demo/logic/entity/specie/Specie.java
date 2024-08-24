@@ -1,6 +1,5 @@
 package com.project.demo.logic.entity.specie;
 
-import com.project.demo.logic.entity.experience.ExperienceEnum;
 import jakarta.persistence.*;
 
 @Table(name = "specie")
@@ -12,10 +11,13 @@ public class Specie {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SpecieEnum name;
+    private String name;
 
     private String description;
+
+    private String sprite;
+
+    private String evolution;
 
     public Specie() {
     }
@@ -28,11 +30,11 @@ public class Specie {
         this.id = id;
     }
 
-    public SpecieEnum getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(SpecieEnum name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -42,5 +44,21 @@ public class Specie {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSprite() {
+        return sprite;
+    }
+
+    public void setSprite(String sprite) {
+        this.sprite = sprite;
+    }
+
+    public String getEvolution() {
+        return evolution;
+    }
+
+    public void setEvolution(String evolution) {
+        this.evolution = evolution;
     }
 }

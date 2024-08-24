@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface SpecieRepository extends CrudRepository<Specie, Long> {
-    Optional<Specie> findByName(SpecieEnum name);
+    Optional<Specie> findByName(String name);
 }
