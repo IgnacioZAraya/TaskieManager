@@ -1,21 +1,29 @@
-
 package com.project.demo.rest.taskie;
 
 import com.project.demo.logic.entity.cosmetic.Cosmetic;
-import com.project.demo.logic.entity.cosmetic.CosmeticRepository;
+import com.project.demo.logic.entity.interactable.Interactable;
+import com.project.demo.logic.entity.interactable.InteractableRepository;
+
+import com.project.demo.logic.entity.levelTaskie.LevelTaskieRepository;
+import com.project.demo.logic.entity.levelTaskie.TaskieLevel;
+import com.project.demo.logic.entity.specie.Specie;
+
 import com.project.demo.logic.entity.specie.SpecieRepository;
 import com.project.demo.logic.entity.status.StatusRepository;
 import com.project.demo.logic.entity.taskie.Taskie;
 import com.project.demo.logic.entity.taskie.TaskieDTO;
 import com.project.demo.logic.entity.taskie.TaskieRepository;
+import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/taskie")
@@ -33,49 +41,120 @@ public class taskieRestController {
     private UserRepository userRepository;
 
     @Autowired
-    private CosmeticRepository cosmeticRepository;
+    private InteractableRepository interactableRepository;
+
+    @Autowired
+    private LevelTaskieRepository levelTaskieRepository;
+
+
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('BASE', 'SUPER_ADMIN', 'ASSOCIATE')")
     public List<Taskie> getAllTaskie() {
-        return taskieRepository.findAll();
+        return taskieRepository.findByVisibility();
     }
 
     @PostMapping
-    public ResponseEntity<Taskie> addTaskie(@RequestBody Taskie taskie) {
-        taskie.setSpecie(specieRepository.findById(taskie.getSpecie().getId())
-                .orElseThrow(() -> new RuntimeException("Specie not found")));
+    public ResponseEntity<?> addTaskie(@RequestBody TaskieDTO taskieDTO) {
 
-        taskie.setAlive(statusRepository.findById(taskie.getAlive().getId())
-                .orElseThrow(() -> new RuntimeException("Status not found")));
+        Specie specie = specieRepository.findById(taskieDTO.getSpecieId())
+                .orElseThrow(() -> new RuntimeException("Specie not found"));
 
-        taskie.setUser(userRepository.findById(taskie.getUser().getId())
-                .orElseThrow(() -> new RuntimeException("User not found")));
+        User user = userRepository.findById(taskieDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Taskie taskie = new Taskie();
+        taskie.setName(taskieDTO.getName());
+        taskie.setSpecie(specie);
+        taskie.setUser(user);
+        taskie.setLife(100);
+        taskie.setEnergy(100);
+        taskie.setCleanse(100);
+        taskie.setHunger(100);
+        taskie.setExperience(0L);
+        taskie.setVisible(true);
+        taskie.setStatus(statusRepository.findById(1L).orElseThrow(() -> new RuntimeException("Status not found")));
+
+        Optional<TaskieLevel> optionalLevel = levelTaskieRepository.findByName("Level 1");
+        if (optionalLevel.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Default level 'Level 1' not found");
+        }
+
+        taskie.setLvlTaskie(optionalLevel.get());
+        userRepository.save(user);
 
         Taskie savedTaskie = taskieRepository.save(taskie);
+
         return ResponseEntity.ok(savedTaskie);
     }
 
-    @PutMapping("/{id}/apply-cosmetic")
-    public ResponseEntity<Taskie> applyCosmetic(@PathVariable Long id, @RequestBody Map<String, Long> request) {
+    @GetMapping("/{id}/cosmetics")
+    public ResponseEntity<List<Cosmetic>> getCosmeticsForTaskie(@PathVariable Long id) {
+        Taskie taskie = taskieRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Taskie not found"));
+        return ResponseEntity.ok(taskie.getTaskieCosmetics());
+    }
+    @PutMapping("/{id}/apply-interactable")
+    public ResponseEntity<Taskie> applyIntractable(@PathVariable Long id, @RequestBody Map<String, Long> request) {
         Long cosmeticId = request.get("cosmeticId");
+
         Taskie taskie = taskieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Taskie not found"));
 
-        Cosmetic cosmetic = cosmeticRepository.findById(cosmeticId)
+        Interactable interactable = interactableRepository.findById(cosmeticId)
                 .orElseThrow(() -> new RuntimeException("Cosmetic not found"));
 
-        taskie.setCleanse(Math.min(taskie.getCleanse() + cosmetic.getDirtynessEffect(), 100));
-        taskie.setHunger(Math.min(taskie.getHunger() + cosmetic.getHungerEffect(), 100));
-        taskie.setEnergy(Math.min(taskie.getEnergy() + cosmetic.getEnergyEffect(), 100));
+        if (interactable.getDirtynessEffect() != 0) {
+            taskie.setCleanse(Math.min(taskie.getCleanse() + interactable.getDirtynessEffect(), 100));
+            increaseTaskieExperience(taskie, 15L);
+        }
 
-        Taskie updatedTaskie = taskieRepository.save(taskie);
-        return ResponseEntity.ok(updatedTaskie);
+        if (interactable.getHungerEffect() != 0) {
+            taskie.setHunger(Math.min(taskie.getHunger() + interactable.getHungerEffect(), 100));
+            increaseTaskieExperience(taskie, 20L);
+        }
+
+        if (interactable.getEnergyEffect() != 0) {
+            taskie.setEnergy(Math.min(taskie.getEnergy() + interactable.getEnergyEffect(), 100));
+            increaseTaskieExperience(taskie, 10L);
+        }
+
+        return ResponseEntity.ok(taskie);
+    }
+    private void increaseTaskieExperience(Taskie taskie, Long experienceToAdd) {
+        taskie.setExperience(taskie.getExperience() + experienceToAdd);
+        updateTaskieExperienceAndLevel(taskie);
+    }
+
+    private void updateTaskieExperienceAndLevel(Taskie taskie) {
+        TaskieLevel currentLevel = taskie.getLvlTaskie();
+        Long experienceToAdd = taskie.getExperience();
+
+        while (experienceToAdd >= currentLevel.getValue()) {
+            experienceToAdd -= currentLevel.getValue();
+
+            TaskieLevel nextLevel = levelTaskieRepository.findById(currentLevel.getId() + 1)
+                    .orElseThrow(() -> new RuntimeException("Next level not found"));
+
+            if (nextLevel.isHasEvolution()) {
+                taskie.setEvolved(true);
+            }
+
+            if(nextLevel.getCosmetic() != null){
+                taskie.getTaskieCosmetics().add(nextLevel.getCosmetic());
+            }
+
+            taskie.setLvlTaskie(nextLevel);
+            currentLevel = nextLevel;
+        }
+
+        taskie.setExperience(experienceToAdd);
+        taskieRepository.save(taskie);
     }
 
     @GetMapping("/userId/{userId}")
-    public ResponseEntity<List<TaskieDTO>> GetTaskieByUser(@PathVariable Long userId) {
-        List<TaskieDTO> taskies = taskieRepository.findByUser(userId);
+    public ResponseEntity<List<Taskie>> getTaskieByUser(@PathVariable Long userId) {
+        List<Taskie> taskies = taskieRepository.findByUser(userId);
         return ResponseEntity.ok(taskies);
     }
 
@@ -91,7 +170,6 @@ public class taskieRestController {
                     existingTaskie.setCleanse(taskie.getCleanse());
                     existingTaskie.setEnergy(taskie.getEnergy());
                     existingTaskie.setExperience(taskie.getExperience());
-                    existingTaskie.setSprite(taskie.getSprite());
                     return taskieRepository.save(existingTaskie);
                 })
                 .orElseGet(() -> {
@@ -105,5 +183,3 @@ public class taskieRestController {
         taskieRepository.deleteById(id);
     }
 }
-
-

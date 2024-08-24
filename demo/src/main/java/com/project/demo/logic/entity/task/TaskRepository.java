@@ -19,6 +19,17 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("SELECT new com.project.demo.logic.entity.task.TaskDTO(t.id, t.name, t.priority, t.description, t.startDate, t.endDate, t.visible, t.recurrent, t.repeatTimes) FROM Task t WHERE t.user.id = :userId AND t.visible = true AND t.startDate BETWEEN :startDate AND :endDate")
     List<TaskDTO> findNextTasks(@Param("userId") Long userId, @Param("startDate") Date startInterval, @Param("endDate") Date endInterval);
+
     void deleteByParentId(Long parentId);
+
+    @Query("SELECT new com.project.demo.logic.entity.task.TaskDTO(t.id, t.name, t.priority, t.description, t.startDate, t.endDate, t.visible, t.recurrent, t.repeatTimes) " +
+            "FROM Task t WHERE t.user.id = :userId AND t.visible = true AND t.startDate >= :startDate " +
+            "AND t.isCompleted = false AND t.verified = false")
+    List<TaskDTO> findFutureTasks(@Param("userId") Long userId, @Param("startDate") Date startDate);
+
+    @Query("SELECT new com.project.demo.logic.entity.task.TaskDTO(t.id, t.name, t.priority, t.description, t.startDate, t.endDate, t.visible, t.recurrent, t.repeatTimes) " +
+            "FROM Task t WHERE t.user.id = :userId AND t.visible = true " +
+            "AND t.isCompleted = true AND t.verified = false")
+    List<TaskDTO> findCompletedTasks(@Param("userId") Long userId);
 
 }

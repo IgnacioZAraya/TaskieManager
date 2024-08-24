@@ -1,12 +1,13 @@
 package com.project.demo.logic.entity.taskie;
 
-
-import com.project.demo.logic.entity.LevelTaskie.TaskieLevel;
+import com.project.demo.logic.entity.cosmetic.Cosmetic;
+import com.project.demo.logic.entity.levelTaskie.TaskieLevel;
 import com.project.demo.logic.entity.specie.Specie;
 import com.project.demo.logic.entity.status.Status;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "taskie")
@@ -16,7 +17,7 @@ public class Taskie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specie_id", referencedColumnName = "id", nullable = false)
     private Specie specie;
 
@@ -24,17 +25,15 @@ public class Taskie {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
-    private Status alive;
+    private Status status;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     private boolean visible;
 
     private Long experience;
-
-    private String sprite;
 
     private Integer life;
 
@@ -44,31 +43,17 @@ public class Taskie {
 
     private Integer energy;
 
+    private boolean evolved;
+
+    @ManyToOne
+    @JoinColumn(name = "level_id", referencedColumnName = "id")
+    private TaskieLevel lvlTaskie;
+
     @ManyToMany
-    @JoinTable(name = "taskie_level", joinColumns = @JoinColumn(name = "taskie_id"), inverseJoinColumns = @JoinColumn(name = "level_id"))
-    private List<TaskieLevel> lvlTaskie;
-
-
-
-
+    @JoinTable( name = "taskie_cosmetics", joinColumns = @JoinColumn(name = "taskie_id"), inverseJoinColumns = @JoinColumn(name = "cosmetic_id"))
+    private List<Cosmetic> taskieCosmetics = new ArrayList<>();
 
     public Taskie() {
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Long getId() {
@@ -95,12 +80,36 @@ public class Taskie {
         this.name = name;
     }
 
-    public Status getAlive() {
-        return alive;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setAlive(Status alive) {
-        this.alive = alive;
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public Long getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Long experience) {
+        this.experience = experience;
     }
 
     public Integer getLife() {
@@ -135,22 +144,27 @@ public class Taskie {
         this.energy = energy;
     }
 
-    public Long getExperience() {
-        return experience;
+    public TaskieLevel getLvlTaskie() {
+        return lvlTaskie;
     }
 
-    public void setExperience(Long experience) {
-        this.experience = experience;
+    public void setLvlTaskie(TaskieLevel lvlTaskie) {
+        this.lvlTaskie = lvlTaskie;
     }
 
-    public String getSprite() {
-        return sprite;
+    public boolean isEvolved() {
+        return evolved;
     }
 
-    public void setSprite(String sprite) {
-        this.sprite = sprite;
+    public void setEvolved(boolean evolved) {
+        this.evolved = evolved;
     }
 
+    public List<Cosmetic> getTaskieCosmetics() {
+        return taskieCosmetics;
+    }
 
-
+    public void setTaskieCosmetics(List<Cosmetic> taskieCosmetics) {
+        this.taskieCosmetics = taskieCosmetics;
+    }
 }

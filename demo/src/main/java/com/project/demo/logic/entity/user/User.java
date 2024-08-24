@@ -1,4 +1,5 @@
 package com.project.demo.logic.entity.user;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.demo.logic.entity.level.Level;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.specie.Specie;
@@ -37,6 +38,12 @@ public class User implements UserDetails {
 
     private Long foodUser;
 
+    private Long cleanerUser;
+
+    private boolean isKid;
+
+    private Integer privateCode;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "taskie_id", referencedColumnName = "id")
     private Taskie taskie;
@@ -48,6 +55,9 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     private Task task;
+
+
+    private Boolean visible;
 
     //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     //    private List<Task> tasks;
@@ -180,6 +190,18 @@ public class User implements UserDetails {
         this.foodUser = foodUser;
     }
 
+
+
+    public boolean isKid() {
+        return isKid;
+    }
+
+    public void setKid(boolean kid) {
+        isKid = kid;
+    }
+
+
+
     public Taskie getTaskie() {
         return taskie;
     }
@@ -206,6 +228,38 @@ public class User implements UserDetails {
 
     public Role getRole() {
         return role;
+    }
+
+    public Integer getPrivateCode() {
+        return privateCode;
+    }
+
+    public void setPrivateCode(Integer privateCode) {
+        this.privateCode = privateCode;
+    }
+
+    public Long getCleanerUser() {
+        return cleanerUser;
+    }
+
+    public void setCleanerUser(Long cleanerUser) {
+        this.cleanerUser = cleanerUser;
+    }
+
+    public Boolean getKid() {
+        return isKid;
+    }
+
+    public void setKid(Boolean kid) {
+        isKid = kid;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
     }
 
     public User setRole(Role role) {

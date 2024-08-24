@@ -1,10 +1,12 @@
 package com.project.demo.logic.entity.taskie;
 
+import com.project.demo.logic.entity.cosmetic.Cosmetic;
 import com.project.demo.logic.entity.specie.Specie;
 import com.project.demo.logic.entity.status.Status;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,18 +15,18 @@ public class TaskieDTO {
     private Long id;
 
 
-    private Specie specie;
+    private Long specieId;
 
     private String name;
 
 
-    private Status alive;
+    private Long statusId;
 
 
-    private User user;
+    private Long userId;
     private Long experience;
 
-    private String sprite;
+
 
     private boolean visible;
     private Integer life;
@@ -35,13 +37,9 @@ public class TaskieDTO {
 
     private Integer energy;
 
-    public Status getAlive() {
-        return alive;
-    }
+    private boolean evolved;
 
-    public void setAlive(Status alive) {
-        this.alive = alive;
-    }
+    private ArrayList<Cosmetic> cosmetics;
 
     public Integer getLife() {
         return life;
@@ -83,13 +81,6 @@ public class TaskieDTO {
         this.id = id;
     }
 
-    public Specie getSpecie() {
-        return specie;
-    }
-
-    public void setSpecie(Specie specie) {
-        this.specie = specie;
-    }
 
     public String getName() {
         return name;
@@ -99,13 +90,7 @@ public class TaskieDTO {
         this.name = name;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public boolean isVisible() {
         return visible;
@@ -124,27 +109,61 @@ public class TaskieDTO {
         this.experience = experience;
     }
 
-    public String getSprite() {
-        return sprite;
+
+    public Long getSpecieId() {
+        return specieId;
     }
 
-    public void setSprite(String sprite) {
-        this.sprite = sprite;
+    public void setSpecieId(Long specieId) {
+        this.specieId = specieId;
     }
 
-    public TaskieDTO(Long id, Specie specie, String name, Status alive, User user, Long experience, String sprite, boolean visible, Integer life, Integer cleanse, Integer hunger, Integer energy) {
+    public Long getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Long statusId) {
+        this.statusId = statusId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public boolean isEvolved() {
+        return evolved;
+    }
+
+    public void setEvolved(boolean evolved) {
+        this.evolved = evolved;
+    }
+
+    public ArrayList<Cosmetic> getCosmetics() {
+        return cosmetics;
+    }
+
+    public void setCosmetics(ArrayList<Cosmetic> cosmetics) {
+        this.cosmetics = cosmetics;
+    }
+
+    public TaskieDTO(Long id, Long specieId, String name, Long statusId, Long userId, Long experience, boolean visible, Integer life, Integer cleanse, Integer hunger, Integer energy, boolean evolved, ArrayList<Cosmetic> cosmetics) {
         this.id = id;
-        this.specie = specie;
+        this.specieId = specieId;
         this.name = name;
-        this.alive = alive;
-        this.user = user;
+        this.statusId = statusId;
+        this.userId = userId;
         this.experience = experience;
-        this.sprite = sprite;
         this.visible = visible;
         this.life = life;
         this.cleanse = cleanse;
         this.hunger = hunger;
         this.energy = energy;
+        this.evolved = evolved;
+        this.cosmetics = cosmetics;
     }
 }
 

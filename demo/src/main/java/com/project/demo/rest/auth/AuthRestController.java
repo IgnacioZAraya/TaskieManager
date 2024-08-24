@@ -4,7 +4,6 @@ import com.project.demo.logic.entity.auth.AuthenticationService;
 import com.project.demo.logic.entity.auth.JwtService;
 import com.project.demo.logic.entity.level.Level;
 import com.project.demo.logic.entity.level.LevelRepository;
-import com.project.demo.logic.entity.level.LevelUserEnum;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
@@ -69,13 +68,18 @@ public class AuthRestController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         user.setExperience(10L);
+        user.setFoodUser(10L);
+        user.setCleanerUser(10L);
+        user.setKid(false);
+        user.setPrivateCode(null);
+        user.setVisible(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER);
 
+        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.BASE);
         if (optionalRole.isEmpty()) {
             return null;
         }
-        Optional<Level> optionalLevel = levelRepository.findByName(LevelUserEnum.valueOf("Level_1"));
+        Optional<Level> optionalLevel = levelRepository.findByName("Level 1");
         if (optionalLevel.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Default level 'Level_1' not found");
         }

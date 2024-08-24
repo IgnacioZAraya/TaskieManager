@@ -1,8 +1,6 @@
 package com.project.demo.logic.entity.unlock;
 
-import com.project.demo.logic.entity.cosmetic.Cosmetic;
-import com.project.demo.logic.entity.food.FoodEnum;
-import com.project.demo.logic.entity.status.Status;
+import com.project.demo.logic.entity.interactable.Interactable;
 import com.project.demo.logic.entity.taskie.Taskie;
 import jakarta.persistence.*;
 
@@ -22,7 +20,7 @@ public class Unlock {
 /*Reutilizar para el sistema de niveles del taskie*/
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "cosmetic_id", referencedColumnName = "id", nullable = false)
-    private Cosmetic cosmetic;
+    private Interactable interactable;
 
     public Long getId() {
         return id;
@@ -48,11 +46,11 @@ public class Unlock {
         isUnlocked = unlocked;
     }
 
-    public Cosmetic getCosmetic() {
-        return cosmetic;
+    public Interactable getCosmetic() {
+        return interactable;
     }
 
-    public void setCosmetic(Cosmetic cosmetic) {
-        this.cosmetic = cosmetic;
+    public void setCosmetic(Interactable interactable) {
+        this.interactable = interactable;
     }
 }
